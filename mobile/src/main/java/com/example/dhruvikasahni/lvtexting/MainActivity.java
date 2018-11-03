@@ -13,6 +13,8 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.textmessageslibrary.TextMessageFetcher;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,18 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                    Manifest.permission.READ_SMS)){
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[] {Manifest.permission.READ_SMS}, 1);
-            }
-            else {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.READ_SMS}, 1);
-            }
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_SMS}, 1);
         }
         else {
-            // do nothing
+            // do nothing - you already have permission
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_SMS}, 1);
         }
     }
 
@@ -43,45 +40,21 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode){
             case 1: {
-                if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    if(ContextCompat.checkSelfPermission(MainActivity.this,
-                            Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-                        // permission granted
-                        ListView lv = findViewById(R.id.SmsList);
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // permission granted
+                    ListView lv = findViewById(R.id.SmsList);
+                    TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
 
-                        if (fetchInbox().isEmpty()) {
-                            return;
-                        }
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                                android.R.layout.simple_list_item_1, fetchInbox());
-                        lv.setAdapter(adapter);
+                    if (messageFetcher.fetchInbox().isEmpty()) {
+                        return;
                     }
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                            android.R.layout.simple_list_item_1, messageFetcher.fetchInbox());
+                    lv.setAdapter(adapter);
                 } else {
                     // no permission granted
                 }
             }
         }
-    }
-
-    public ArrayList<String> fetchInbox(){
-        ArrayList<String> sms = new ArrayList<>();
-        Uri uri = Uri.parse("content://sms/inbox");
-        Cursor cursor = getContentResolver().query(uri, new String[]{"_id", "address", "date", "body"},
-                null, null, null);
-
-        try {
-            cursor.moveToFirst();
-            while(cursor.moveToNext()) {
-                String address = cursor.getString(1);
-                String body = cursor.getString(3);
-                sms.add("Name: " + address + "\n Message: " + body);
-            }
-            cursor.close();
-        }
-        catch(NullPointerException e){
-            // do nothing
-        }
-
-        return sms;
     }
 }
