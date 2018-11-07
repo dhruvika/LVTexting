@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
                     ListView lv = findViewById(R.id.SmsList);
                     TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
 
-                    if (messageFetcher.fetchInbox().isEmpty()) {
+                    if (messageFetcher.fetchRecentAddresses().isEmpty()) {
                         return;
                     }
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, messageFetcher.fetchInbox());
+                            android.R.layout.simple_list_item_1, messageFetcher.fetchRecentAddresses());
                     lv.setAdapter(adapter);
                 } else {
                     // no permission granted
