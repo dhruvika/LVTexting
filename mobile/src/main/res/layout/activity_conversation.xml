@@ -29,6 +29,7 @@
         android:layout_marginRight="28dp"
         android:layout_marginBottom="90dp"
         android:text=">"
+        android:textColor="@color/colorWhite"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
