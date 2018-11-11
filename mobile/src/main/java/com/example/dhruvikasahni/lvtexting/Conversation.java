@@ -120,13 +120,18 @@ public class Conversation extends AppCompatActivity {
 
     public void printMessage(){ //has both sent and received texts in one place (in correct chron order)
         //works for all american numbers, AND justifies users
+
+        Bundle bundle = getIntent().getExtras();
+
         TextView msg = findViewById(R.id.textView);
         String msgContent = "";
         final Uri SMS_INBOX = Uri.parse("content://sms");
         Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
         cursor.moveToFirst();
         while(cursor.moveToNext()) {
-            String no = "3125324190";
+            String no = bundle.getString("phoneNumber");//"3125324190";
+//            TextView textView2 = findViewById(R.id.textView2);
+//            textView2.setText(no+"   "+Integer.toString(no.length()));
             try{
                 if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)){
                     if(cursor.getString(cursor.getColumnIndex("person")) == null){ //user-sent message

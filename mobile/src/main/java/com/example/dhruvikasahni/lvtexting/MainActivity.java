@@ -68,8 +68,16 @@ public class MainActivity extends AppCompatActivity {
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            String line = lv.getItemAtPosition(i).toString();
+                            int space = 0;
+                            String phoneNumber = "";
+                            for (int c=0;c<line.length();c++){
+                                if (line.charAt(c) == ' ' ||line.charAt(c)=='\t'){space++;}
+                                if (space == 2){break;}
+                                if (space ==1 && line.charAt(c)!=' '){phoneNumber = phoneNumber + line.charAt(c);}
+                            }
                             Intent intent = new Intent(MainActivity.this, Conversation.class);
-                            intent.putExtra("phoneNumber",lv.getItemAtPosition(i).toString());
+                            intent.putExtra("phoneNumber",phoneNumber);//lv.getItemAtPosition(i).toString());//
                             startActivity(intent);
                         }
                     });
