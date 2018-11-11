@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.example.textmessageslibrary.TextMessageFetcher;
 
@@ -25,14 +28,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{Manifest.permission.READ_SMS}, 1);
+        }
+        else if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_CONTACTS}, 1);
         }
         else {
             // do nothing - you already have permission
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{Manifest.permission.READ_SMS}, 1);
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_CONTACTS}, 1);
         }
     }
 
@@ -41,16 +51,47 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode){
             case 1: {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    // permission granted
-                    ListView lv = findViewById(R.id.SmsList);
+                    // permission granted ()
+                    TableLayout dashboard = findViewById(R.id.Dashboard);
                     TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
 
-                    if (messageFetcher.fetchRecentAddresses().isEmpty()) {
+                    if (messageFetcher.fetchRecentConversations().isEmpty()) {
                         return;
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                            android.R.layout.simple_list_item_1, messageFetcher.fetchRecentAddresses());
-                    lv.setAdapter(adapter);
+
+                    for (ArrayList<String> conversationInfo : messageFetcher.fetchRecentConversations()){
+                        TableRow row = new TableRow(this);
+                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                        row.setLayoutParams(lp);
+
+                        // Create the required fields
+                        TextView readText = new TextView(this);
+                        if(conversationInfo.get(0).equals("unread")){
+                            readText.setText("");
+                        }
+                        else{
+                            readText.setText("\u25CF  ");
+                        }
+                        TextView addressText = new TextView(this);
+                        String contactName = messageFetcher.getContact(conversationInfo.get(1));
+                        if(contactName != null){
+                            addressText.setText(contactName);
+                        }
+                        else{
+                            addressText.setText(conversationInfo.get(1));
+                        }
+                        TextView dateText = new TextView(this);
+                        dateText.setText(conversationInfo.get(2));
+
+                        // Add the fields to the row
+                        row.addView(readText);
+                        row.addView(addressText);
+                        row.addView(dateText);
+
+                        // Add the row to the dashboard
+                        dashboard.addView(row);
+                    }
+
                 } else {
                     // no permission granted
                 }

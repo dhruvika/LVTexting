@@ -1,8 +1,10 @@
 package com.example.textmessageslibrary;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -47,32 +49,36 @@ public class TextMessageFetcher {
         return sms;
     }
 
-    // Fetches the names/addresses of the most recently contacted numbers and the date of most recent message.
-    public ArrayList<String> fetchRecentAddresses(){
+    // Fetches recent conversations with whether they are read/unread, who its with and the date of the last message.
+    public ArrayList<ArrayList<String>> fetchRecentConversations(){
 
-        ArrayList<String> sortedAddresses = new ArrayList<>();
+        ArrayList<ArrayList<String>> allConversations = new ArrayList<>();
         Set<String> addresses = new HashSet<>();
         Uri uri = Uri.parse("content://sms/inbox");
-        Cursor cursor = this.activity.getContentResolver().query(uri, new String[]{"_id", "address", "date", "body", "read"},
+        Cursor cursor = this.activity.getContentResolver().query(uri, new String[]{"_id", "address", "date", "read"},
                 null, null, "date ASC");
 
         try {
             cursor.moveToFirst();
             int totalCount = cursor.getCount();
             for (int i = 0; i < totalCount; i++) {
+                ArrayList<String> conversation = new ArrayList<>();
                 String address = cursor.getString(1);
                 Long dateMillis = cursor.getLong(2);
                 String date = getDate(dateMillis, "dd/MM/yyyy hh:mm:ss");
-                int read = cursor.getInt(4);
+                int read = cursor.getInt(3);
 
                 if(!addresses.contains(address)){
                     addresses.add(address);
                     if(read == 1){
-                        sortedAddresses.add("X " + address + "\t\t\t\t" + date);
+                        conversation.add("unread");
                     }
                     else {
-                        sortedAddresses.add(address + "\t\t\t\t" + date);
+                        conversation.add("read");
                     }
+                    conversation.add(address);
+                    conversation.add(date);
+                    allConversations.add(conversation);
                 }
                 cursor.moveToNext();
             }
@@ -82,9 +88,32 @@ public class TextMessageFetcher {
             // do nothing
         }
 
-        Collections.reverse(sortedAddresses);
+        Collections.reverse(allConversations);
 
-        return sortedAddresses;
+        return allConversations;
+    }
+
+    /**
+     * Return the name of the contact if it exists in the phonebook.
+     * @param number phone number assosciated with contact
+     * @return String contact name if one exists, null otherwise.
+     */
+    public String getContact(String number) {
+        Uri lookupUri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(number));
+        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID,
+                ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
+        Cursor cur = activity.getContentResolver().query(lookupUri,mPhoneNumberProjection, null, null, null);
+        try {
+            if (cur.moveToFirst()) {
+                return cur.getString(2);
+            }
+        } finally {
+            if (cur != null)
+                cur.close();
+        }
+        return null;
     }
 
     /**
