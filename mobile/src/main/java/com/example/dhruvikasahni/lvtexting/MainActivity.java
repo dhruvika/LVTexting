@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             case 1: {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     // permission granted
-                    ListView lv = findViewById(R.id.SmsList);
+                    final ListView lv = findViewById(R.id.SmsList);
                     TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
 
                     if (messageFetcher.fetchRecentAddresses().isEmpty()) {
@@ -62,6 +63,17 @@ public class MainActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                             android.R.layout.simple_list_item_1, messageFetcher.fetchRecentAddresses());
                     lv.setAdapter(adapter);
+
+
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            Intent intent = new Intent(MainActivity.this, Conversation.class);
+                            intent.putExtra("phoneNumber",lv.getItemAtPosition(i).toString());
+                            startActivity(intent);
+                        }
+                    });
+
                 } else {
                     // no permission granted
                 }
