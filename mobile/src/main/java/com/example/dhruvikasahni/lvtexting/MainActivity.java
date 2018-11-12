@@ -1,6 +1,8 @@
 package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,7 +12,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -28,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED ) {
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{Manifest.permission.READ_SMS}, 1);
         }
@@ -51,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{Manifest.permission.RECEIVE_SMS}, 1);
         }
+        Button convo = (Button) findViewById(R.id.convo); //FOR CONVERSATION DEBUGGING (Abhiti will remove)
+        convo.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                startActivity(new Intent(getApplicationContext(), Conversation.class));
+            }
+        });
+
     }
 
     @Override
@@ -58,8 +73,27 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode){
             case 1: {
                 // permission granted
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     loadSMSData();
+
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            String line = lv.getItemAtPosition(i).toString();
+                            int space = 0;
+                            String phoneNumber = "";
+                            for (int c=0;c<line.length();c++){
+                                if (line.charAt(c) == ' ' ||line.charAt(c)=='\t'){space++;}
+                                if (space == 2){break;}
+                                if (space ==1 && line.charAt(c)!=' '){phoneNumber = phoneNumber + line.charAt(c);}
+                            }
+                            Intent intent = new Intent(MainActivity.this, Conversation.class);
+                            intent.putExtra("phoneNumber",phoneNumber);//lv.getItemAtPosition(i).toString());//
+                            startActivity(intent);
+                        }
+                    });
+                }
+
                 else {
                     // no permission granted
                 }
@@ -109,40 +143,4 @@ public class MainActivity extends AppCompatActivity {
             dashboard.addView(row);
         }
     }
-
-//    /** Called when user presses the New Message Button */
-//    public void newMessage(View view) {
-//        // Do something in response to button click
-//        TableRow row = new TableRow(this);
-//        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-//        row.setLayoutParams(lp);
-//
-//        // Create the required fields
-//        TextView readText = new TextView(this);
-//        if(conversationInfo.get(0).equals("unread")){
-//            readText.setText("");
-//        }
-//        else{
-//            readText.setText("\u25CF  ");
-//        }
-//        TextView addressText = new TextView(this);
-//        String contactName = messageFetcher.getContact(conversationInfo.get(1));
-//        if(contactName != null){
-//            addressText.setText(contactName);
-//        }
-//        else{
-//            addressText.setText(conversationInfo.get(1));
-//        }
-//        TextView dateText = new TextView(this);
-//        dateText.setText(conversationInfo.get(2));
-//
-//        // Add the fields to the row
-//        row.addView(readText);
-//        row.addView(addressText);
-//        row.addView(dateText);
-//
-//        // Add the row to the dashboard
-//        dashboard.addView(row);
-//
-//    }
 }
