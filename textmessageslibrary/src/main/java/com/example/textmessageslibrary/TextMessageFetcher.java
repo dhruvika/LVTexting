@@ -54,9 +54,9 @@ public class TextMessageFetcher {
 
         ArrayList<ArrayList<String>> allConversations = new ArrayList<>();
         Set<String> addresses = new HashSet<>();
-        Uri uri = Uri.parse("content://sms/inbox");
-        Cursor cursor = this.activity.getContentResolver().query(uri, new String[]{"_id", "address", "date", "read"},
-                null, null, "date ASC");
+        Uri uri = Uri.parse("content://mms-sms/conversations");
+        Cursor cursor = this.activity.getContentResolver().query(uri, new String[]{"_id", "address", "date", "read", "body"},
+                null, null, "date DESC");
 
         try {
             cursor.moveToFirst();
@@ -66,6 +66,7 @@ public class TextMessageFetcher {
                 String address = cursor.getString(1);
                 Long dateMillis = cursor.getLong(2);
                 String date = getDate(dateMillis, "dd/MM/yyyy hh:mm:ss");
+                String body = cursor.getString(4);
                 int read = cursor.getInt(3);
 
                 if(!addresses.contains(address)){
@@ -88,8 +89,6 @@ public class TextMessageFetcher {
             // do nothing
         }
 
-        Collections.reverse(allConversations);
-
         return allConversations;
     }
 
@@ -98,10 +97,33 @@ public class TextMessageFetcher {
      * @param number phone number assosciated with contact
      * @return String contact name if one exists, null otherwise.
      */
-    public String getContact(String number) {
+    public String getContactName(String number) {
         Uri lookupUri = Uri.withAppendedPath(
                 ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(number));
+        String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID,
+                ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
+        Cursor cur = activity.getContentResolver().query(lookupUri,mPhoneNumberProjection, null, null, null);
+        try {
+            if (cur.moveToFirst()) {
+                return cur.getString(2);
+            }
+        } finally {
+            if (cur != null)
+                cur.close();
+        }
+        return null;
+    }
+
+    /**
+     * Return the phone number of the contact if it exists in the phonebook.
+     * @param contactName contact name assosciated with a phone number
+     * @return String phone numeber if one exists in the contact list, null otherwise.
+     */
+    public String getContactNumber(String contactName) {
+        Uri lookupUri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(contactName));
         String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID,
                 ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME };
         Cursor cur = activity.getContentResolver().query(lookupUri,mPhoneNumberProjection, null, null, null);
