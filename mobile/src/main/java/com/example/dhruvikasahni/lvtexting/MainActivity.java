@@ -1,6 +1,7 @@
 package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.view.View;
@@ -25,6 +27,8 @@ import android.widget.TextView;
 
 import com.example.textmessageslibrary.TextMessageFetcher;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,32 +37,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS};
 
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
+
+        if(!hasAllPermissions(MainActivity.this, permissions)) {
             ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_SMS}, 1);
-        }
-        else if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_CONTACTS}, 1);
-        }
-        else if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.RECEIVE_SMS}, 1);
+                    permissions, 1);
         }
         else {
             // do nothing - you already have permission
             ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_SMS}, 1);
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_CONTACTS}, 1);
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.RECEIVE_SMS}, 1);
+                    permissions, 1);
         }
-        Button convo = (Button) findViewById(R.id.convo); //FOR CONVERSATION DEBUGGING (Abhiti will remove)
+        Button convo = findViewById(R.id.convo); //FOR CONVERSATION DEBUGGING (Abhiti will remove)
         convo.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -68,30 +59,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public boolean hasAllPermissions(Context context, String[] permissions){
+        for(String permission: permissions){
+            if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode){
             case 1: {
                 // permission granted
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    loadSMSData();
-
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            String line = lv.getItemAtPosition(i).toString();
-                            int space = 0;
-                            String phoneNumber = "";
-                            for (int c=0;c<line.length();c++){
-                                if (line.charAt(c) == ' ' ||line.charAt(c)=='\t'){space++;}
-                                if (space == 2){break;}
-                                if (space ==1 && line.charAt(c)!=' '){phoneNumber = phoneNumber + line.charAt(c);}
-                            }
-                            Intent intent = new Intent(MainActivity.this, Conversation.class);
-                            intent.putExtra("phoneNumber",phoneNumber);//lv.getItemAtPosition(i).toString());//
-                            startActivity(intent);
-                        }
-                    });
+                    TableLayout dashboard = findViewById(R.id.Dashboard);
+                    loadSMSData(dashboard);
                 }
 
                 else {
@@ -101,14 +86,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void loadSMSData(){
-        TableLayout dashboard = findViewById(R.id.Dashboard);
+    public void loadSMSData(TableLayout dashboard){
+
         TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
 
         if (messageFetcher.fetchRecentConversations().isEmpty()) {
             return;
         }
 
+        int rowTag = 0;
         for (ArrayList<String> conversationInfo : messageFetcher.fetchRecentConversations()){
             TableRow row = new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -139,8 +125,20 @@ public class MainActivity extends AppCompatActivity {
             row.addView(addressText);
             row.addView(dateText);
 
+            // Add a listener for clicks
+            row.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    TableRow tableRow = (TableRow) v;
+                    TextView phoneNumText = (TextView) tableRow.getChildAt(1);
+                    String phoneNumber = phoneNumText.getText().toString();
+                    Intent intent = new Intent(MainActivity.this, Conversation.class);
+                    intent.putExtra("phoneNumber",phoneNumber);
+                    startActivity(intent);
+                }});
+
             // Add the row to the dashboard
             dashboard.addView(row);
+
         }
     }
 }
