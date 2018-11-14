@@ -42,7 +42,7 @@
 
                 <ImageButton
                     android:id="@+id/FONT_SIZE_D"
-                    android:layout_width="80dp"
+                    android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:background="@color/colorPrimary"
                     android:contentDescription="@string/font_size_down_arrow"
@@ -62,7 +62,7 @@
 
                 <ImageButton
                     android:id="@+id/FONT_SIZE_I"
-                    android:layout_width="80dp"
+                    android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:background="@color/colorPrimary"
                     android:contentDescription="@string/font_size_up_arrow"
