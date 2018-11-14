@@ -139,6 +139,24 @@ public class TextMessageFetcher {
     }
 
     /**
+     * Return the phone number of the contact if it exists in the phonebook.
+     * @param contactName contact name assosciated with a phone number
+     * @return String phone numeber if one exists in the contact list, null otherwise.
+     */
+    public String getContactNumber2(String contactName) {
+        String number = null;
+        String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+" like'%" + contactName +"%'";
+        String[] projection = new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER};
+        Cursor c = activity.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                projection, selection, null, null);
+        if (c.moveToFirst()) {
+            number = c.getString(0);
+        }
+        c.close();
+        return number;
+    }
+
+    /**
      * Return date in specified format.
      * @param milliSeconds Date in milliseconds
      * @param dateFormat Date format

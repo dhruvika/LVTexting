@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this,
                     permissions, 1);
         }
+
         Button convo = findViewById(R.id.convo); //FOR CONVERSATION DEBUGGING (Abhiti will remove)
         convo.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -94,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        int rowTag = 0;
         for (ArrayList<String> conversationInfo : messageFetcher.fetchRecentConversations()){
             TableRow row = new TableRow(this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             }
             TextView addressText = new TextView(this);
             String contactName = messageFetcher.getContactName(conversationInfo.get(1));
-            String phoneNum = messageFetcher.getContactNumber(contactName);
             if(contactName != null){
                 addressText.setText(contactName);
             }
@@ -128,17 +127,21 @@ public class MainActivity extends AppCompatActivity {
             // Add a listener for clicks
             row.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    TextMessageFetcher messageFetcher2 = new TextMessageFetcher(MainActivity.this);
                     TableRow tableRow = (TableRow) v;
                     TextView phoneNumText = (TextView) tableRow.getChildAt(1);
-                    String phoneNumber = phoneNumText.getText().toString();
+                    String address = phoneNumText.getText().toString();
                     Intent intent = new Intent(MainActivity.this, Conversation.class);
-                    intent.putExtra("phoneNumber",phoneNumber);
+                    String phoneNumber = messageFetcher2.getContactNumber2(address);
+                    if(phoneNumber != null){
+                        address = phoneNumber;
+                    }
+                    intent.putExtra("phoneNumber",address);
                     startActivity(intent);
                 }});
 
             // Add the row to the dashboard
             dashboard.addView(row);
-
         }
     }
 }
