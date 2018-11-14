@@ -1,14 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@color/colorPrimaryDark</item>
-        <item name="android:colorBackground">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:windowBackground">@color/colorBlack</item>
+        <item name="android:colorBackground">@color/colorBlack</item>
+        <!-- requires API 21 and up -->
+        <item name="android:navigationBarColor">@color/colorWhite</item> <!-- bottom bar -->
+        <item name="android:statusBarColor">@color/colorWhite</item> <!-- top bar -->
+        <item name="android:colorButtonNormal">@color/colorBlack</item>
     </style>
 
     <style name="FontStyle">
