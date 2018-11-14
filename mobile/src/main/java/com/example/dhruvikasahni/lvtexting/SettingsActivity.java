@@ -28,7 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void onFontChange() {
-        SettingsManager.onFontChange(this, (ViewGroup) findViewById(R.id.SETTINGS_CONTAINER));
+        SettingsManager.onFontChange(this, (ViewGroup) findViewById(R.id.Settings_Container));
     }
     public void onChangeFontSize(View v) {
 

@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -49,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        setFontFromSettings();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setFontFromSettings();
     }
 
     public boolean hasAllPermissions(Context context, String[] permissions){
@@ -139,5 +147,10 @@ public class MainActivity extends AppCompatActivity {
             // Add the row to the dashboard
             dashboard.addView(row);
         }
+    }
+
+
+    public void setFontFromSettings() {
+        SettingsManager.onFontChange(this, (ViewGroup) findViewById(R.id.Dashboard_Container));
     }
 }
