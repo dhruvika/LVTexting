@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -22,8 +24,18 @@ import com.example.textmessageslibrary.TextMessageFetcher;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    TextToSpeech t1;
+    Button readAloud;
+    Button goTo;
+    List<List<String>> messageList = new ArrayList<>();
+    List<String> currentMessage;
+    Boolean restart = false;
+    Boolean paused = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +63,79 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setFontFromSettings();
+
+        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.US);
+                }
+            }
+        });
+
+        readAloud = (Button)findViewById(R.id.readAloud);
+        readAloud.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        if (! t1.isSpeaking()) {
+                            readAloud.setBackgroundResource(R.drawable.stop);
+                            TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
+                            if (messageFetcher.fetchRecentConversations().isEmpty()) {
+                                t1.speak("No new messages", TextToSpeech.QUEUE_FLUSH, null);
+                                return;
+                            }
+                            for (ArrayList<String> conversationInfo : messageFetcher.fetchRecentConversations()) {
+                                if (conversationInfo.get(0).equals("read")) {
+                                    messageList.add(conversationInfo);
+                                }
+                            }
+                            while (messageList.size() != 0 && !restart) {
+                                currentMessage = messageList.remove(0);
+                                String speak = "";
+                                String contactName = messageFetcher.getContactName(currentMessage.get(1));
+                                if(contactName != null){
+                                    speak += contactName;
+                                }
+                                else{
+                                    speak += currentMessage.get(1);
+                                }
+                                speak += currentMessage.get(2);
+                                t1.speak(speak, TextToSpeech.QUEUE_ADD, null);
+                                while (t1.isSpeaking()) {};
+                            }
+                            restart = false;
+                            messageList.clear();
+                            readAloud.setBackgroundResource(R.drawable.play);
+                        } else {
+                            restart = true;
+                            t1.stop();
+                            t1.speak("", TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                    }
+                }).start();
+            }
+        });
+        goTo = (Button)findViewById(R.id.goTo);
+        goTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (t1.isSpeaking()) {
+                    TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
+                    t1.stop();
+                    restart = true;
+                    String address = currentMessage.get(1);
+                    Intent intent = new Intent(MainActivity.this, Conversation.class);
+                    String phoneNumber = messageFetcher.getContactNumber2(address);
+                    if(phoneNumber != null){
+                        address = phoneNumber;
+                    }
+                    intent.putExtra("phoneNumber", address);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
