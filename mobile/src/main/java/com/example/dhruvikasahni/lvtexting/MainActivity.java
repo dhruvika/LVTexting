@@ -54,13 +54,6 @@ public class MainActivity extends AppCompatActivity {
                     permissions, 1);
         }
 
-        Button convo = findViewById(R.id.convo); //FOR CONVERSATION DEBUGGING (Abhiti will remove)
-        convo.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                startActivity(new Intent(getApplicationContext(), Conversation.class));
-            }
-        });
 
         setFontFromSettings();
 
