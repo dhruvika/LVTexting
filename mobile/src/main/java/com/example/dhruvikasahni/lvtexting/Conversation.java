@@ -13,9 +13,15 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Conversation extends AppCompatActivity {
 
@@ -32,8 +38,11 @@ public class Conversation extends AppCompatActivity {
                     new String[]{Manifest.permission.SEND_SMS},
                     1);
         } else { //Permission already given
+//            super.onCreate(savedInstanceState);
+//            setContentView(R.layout.activity_conversation);
             sendSms();
-            printMessage();
+//            printMessage();
+            setGrid();
 
         }
 
@@ -56,11 +65,77 @@ public class Conversation extends AppCompatActivity {
                         && grantResults[0] ==
                         PackageManager.PERMISSION_GRANTED) {
                     sendSms();
+//                    printMessage();
+                    setGrid();
                 } else {
                     // Permission denied.
                 }
             }
         }
+
+    }
+
+    public void setGrid(){
+
+        GridView messages = findViewById(R.id.messages);
+
+
+        List<String> messagesList = new ArrayList<String>();
+        int previous = 1; //0:other, 1:user
+
+        //works for all american numbers, AND justifies users
+
+        Bundle bundle = getIntent().getExtras();
+
+//        TextView msg = findViewById(R.id.textView);
+        final Uri SMS_INBOX = Uri.parse("content://sms");
+        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
+        cursor.moveToFirst();
+        while(cursor.moveToNext()) {
+            String noStr = bundle.getString("phoneNumber");
+            String no = "";
+            for (int c=0; c<noStr.length();c++){
+                if (Character.isDigit(noStr.charAt(c))){//(noStr.charAt(c)!='+'&&noStr.charAt(c)!='-'&&noStr.charAt(c)!=' '&&noStr.charAt(c)!='('&&noStr.charAt(c)!=')'){
+                    no = no + noStr.charAt(c);
+                }
+                if (no.length()>10){//TODO: fix longer automated number parsing
+                    no = no.substring(1);
+                }
+            }
+//            TextView textView2 = findViewById(R.id.textView2);
+//            String allnos = "";
+//            textView2.setText(no+"   "+Integer.toString(no.length()));
+            try{
+//                allnos = allnos + no + '\n';
+                if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1))){
+                    if(cursor.getString(cursor.getColumnIndex("type")).equals("2")){ //user-sent message
+                        if(previous==1){//previous message also sent by me
+                            messagesList.add("");
+                        } else{
+                            messagesList.add("");
+                            messagesList.add("");
+                        }
+                        previous = 1;
+                    } else { //other-sent message
+                        if(previous == 0){//previous message also sent by other
+                            messagesList.add("");
+                        }
+                        previous = 0;
+                    }
+//                    messagesList.add(Boolean.toString(cursor.getString(cursor.getColumnIndex("type")).equals("1")));
+                    messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+                }
+            } catch (Exception e){
+                messagesList.add("ERROR!");
+            }
+//            textView2.setText(allnos);
+        }
+        String [] messagesArray = messagesList.toArray(new String[0]);
+//        msg.setText(msgContent);
+
+        cursor.close();
+
+        messages.setAdapter(new MessageGridAdapter(this, messagesArray));
 
     }
 
@@ -80,7 +155,7 @@ public class Conversation extends AppCompatActivity {
                         no = no + noStr.charAt(c);
                     }
                 }
-                String smsNumber = no; //String.format("19175656215"); //hardcoded Abhiti's number for now
+                String smsNumber = no;
                 EditText smsEditText = (EditText) findViewById(R.id.smsInput);
                 String sms = smsEditText.getText().toString();
                 String scAddress = null;
@@ -104,7 +179,7 @@ public class Conversation extends AppCompatActivity {
         Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
         cursor.moveToFirst();
         while(cursor.moveToNext()) {
-            String noStr = bundle.getString("phoneNumber");//"3125324190";
+            String noStr = bundle.getString("phoneNumber");
             String no = "";
             for (int c=0; c<noStr.length();c++){
                 if (noStr.charAt(c)!='+'&&noStr.charAt(c)!='-'&&noStr.charAt(c)!=' '&&noStr.charAt(c)!='('&&noStr.charAt(c)!=')'){
@@ -119,11 +194,9 @@ public class Conversation extends AppCompatActivity {
                         msgContent = msgContent+"                                        ";
                     }
                     msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("person"))+ '\n'; // if null, me; else contact
-
                 }
-            } catch (Exception e ){
-
+            } catch (Exception e){
+                msgContent = "Error loading messages";
             }
         }
         msg.setText(msgContent);
