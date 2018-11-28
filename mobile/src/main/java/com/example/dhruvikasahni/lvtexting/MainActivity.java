@@ -23,7 +23,9 @@ import com.example.textmessageslibrary.TextMessageFetcher;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this,
                     permissions, 1);
         }
-
 
         setFontFromSettings();
 
@@ -92,9 +93,20 @@ public class MainActivity extends AppCompatActivity {
                                     speak += contactName;
                                 }
                                 else{
-                                    speak += currentMessage.get(1);
+                                    for (int i = 0; i < currentMessage.get(1).length(); i ++) {
+                                        speak += currentMessage.get(1).charAt(i);
+                                        speak += ",";
+                                    }
                                 }
-                                speak += currentMessage.get(2);
+                                SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                                SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d yyyy, HH:mm aaa");
+                                try {
+                                    Date parsed = inputFormat.parse(currentMessage.get(2));
+                                    speak += outputFormat.format(parsed);
+
+                                } catch (Exception e) {
+
+                                }
                                 t1.speak(speak, TextToSpeech.QUEUE_ADD, null);
                                 while (t1.isSpeaking()) {};
                             }
