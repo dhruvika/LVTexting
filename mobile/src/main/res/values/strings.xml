@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">LVTexting</string>
+    <string name="settings_button">Settings</string>
+
+    <string name="sample_text">Sample Text</string>
+    <string name="sample_text_desc">This is sample text</string>
+
+    <string name="font_size">Font Size</string>
+    <string name="font_size_up_arrow">Font Size Up Arrow</string>
+    <string name="font_size_down_arrow">Font Size Down Arrow</string>
 </resources>

@@ -12,9 +12,16 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Conversation extends AppCompatActivity {
 
@@ -31,13 +38,22 @@ public class Conversation extends AppCompatActivity {
                     new String[]{Manifest.permission.SEND_SMS},
                     1);
         } else { //Permission already given
+//            super.onCreate(savedInstanceState);
+//            setContentView(R.layout.activity_conversation);
             sendSms();
-            printMessage();
+//            printMessage();
+            setGrid();
 
         }
 
 
+        setFontFromSettings();
+    }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setFontFromSettings();
     }
 
     @Override
@@ -49,6 +65,8 @@ public class Conversation extends AppCompatActivity {
                         && grantResults[0] ==
                         PackageManager.PERMISSION_GRANTED) {
                     sendSms();
+//                    printMessage();
+                    setGrid();
                 } else {
                     // Permission denied.
                 }
@@ -57,12 +75,87 @@ public class Conversation extends AppCompatActivity {
 
     }
 
+    public void setGrid(){
+
+        GridView messages = findViewById(R.id.messages);
+
+
+        List<String> messagesList = new ArrayList<String>();
+        int previous = 1; //0:other, 1:user
+
+        //works for all american numbers, AND justifies users
+
+        Bundle bundle = getIntent().getExtras();
+
+//        TextView msg = findViewById(R.id.textView);
+        final Uri SMS_INBOX = Uri.parse("content://sms");
+        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
+        cursor.moveToFirst();
+        while(cursor.moveToNext()) {
+            String noStr = bundle.getString("phoneNumber");
+            String no = "";
+            for (int c=0; c<noStr.length();c++){
+                if (Character.isDigit(noStr.charAt(c))){//(noStr.charAt(c)!='+'&&noStr.charAt(c)!='-'&&noStr.charAt(c)!=' '&&noStr.charAt(c)!='('&&noStr.charAt(c)!=')'){
+                    no = no + noStr.charAt(c);
+                }
+                if (no.length()>10){//TODO: fix longer automated number parsing
+                    no = no.substring(1);
+                }
+            }
+//            TextView textView2 = findViewById(R.id.textView2);
+//            String allnos = "";
+//            textView2.setText(no+"   "+Integer.toString(no.length()));
+            try{
+//                allnos = allnos + no + '\n';
+                if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1))){
+                    if(cursor.getString(cursor.getColumnIndex("type")).equals("2")){ //user-sent message
+                        if(previous==1){//previous message also sent by me
+                            messagesList.add("");
+                        } else{
+                            messagesList.add("");
+                            messagesList.add("");
+                        }
+                        previous = 1;
+                    } else { //other-sent message
+                        if(previous == 0){//previous message also sent by other
+                            messagesList.add("");
+                        }
+                        previous = 0;
+                    }
+//                    messagesList.add(Boolean.toString(cursor.getString(cursor.getColumnIndex("type")).equals("1")));
+                    messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+                }
+            } catch (Exception e){
+                messagesList.add("ERROR!");
+            }
+//            textView2.setText(allnos);
+        }
+        String [] messagesArray = messagesList.toArray(new String[0]);
+//        msg.setText(msgContent);
+
+        cursor.close();
+
+        messages.setAdapter(new MessageGridAdapter(this, messagesArray));
+
+    }
+
     public void sendSms(){
         Button sendButton = (Button) findViewById(R.id.sendButton);
+
+
+
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                String smsNumber = String.format("19175656215"); //hardcoded Abhiti's number for now
+                Bundle bundle = getIntent().getExtras();
+                String noStr = bundle.getString("phoneNumber");
+                String no = "";
+                for (int c=0; c<noStr.length();c++){
+                    if (noStr.charAt(c)!='+'&&noStr.charAt(c)!='-'&&noStr.charAt(c)!=' '&&noStr.charAt(c)!='('&&noStr.charAt(c)!=')'){
+                        no = no + noStr.charAt(c);
+                    }
+                }
+                String smsNumber = no;
                 EditText smsEditText = (EditText) findViewById(R.id.smsInput);
                 String sms = smsEditText.getText().toString();
                 String scAddress = null;
@@ -75,49 +168,6 @@ public class Conversation extends AppCompatActivity {
         });
     }
 
-//    public void printMessage(){ //only shows received for no bloody reason
-//        TextView msg = findViewById(R.id.textView);
-//        String msgContent = "";
-//        final Uri SMS_INBOX = Uri.parse("content://sms");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, "address = ?",
-//                new String[] {"9172388614"}, "date desc limit 20");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) {
-//            try{
-//                msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-//            } catch (Exception e ){
-//
-//            }
-//        }
-//        msg.setText(msgContent);
-//        cursor.close();
-//    }
-
-//    public void printMessage(){ //has both sent and received texts in one place (in correct chron order)
-//        TextView msg = findViewById(R.id.textView);
-//        String msgContent = "";
-//        final Uri SMS_INBOX = Uri.parse("content://sms");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date desc");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) {
-//            try{
-////                if (cursor.getString(cursor.getColumnIndex("address")).equals("9172388614")){
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("address"))+ '\n';
-////                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("_id"))+ '\n'; // increasing #
-////                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("thread_id"))+ '\n'; //same #
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("person"))+ '\n'; // if null, me; else contact
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("type"))+ '\n'; //1 is them, 2 is me
-//
-////                }
-//            } catch (Exception e ){
-//
-//            }
-//        }
-//        msg.setText(msgContent);
-//        cursor.close();
-//    }
-
     public void printMessage(){ //has both sent and received texts in one place (in correct chron order)
         //works for all american numbers, AND justifies users
 
@@ -129,188 +179,38 @@ public class Conversation extends AppCompatActivity {
         Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
         cursor.moveToFirst();
         while(cursor.moveToNext()) {
-            String no = bundle.getString("phoneNumber");//"3125324190";
+            String noStr = bundle.getString("phoneNumber");
+            String no = "";
+            for (int c=0; c<noStr.length();c++){
+                if (noStr.charAt(c)!='+'&&noStr.charAt(c)!='-'&&noStr.charAt(c)!=' '&&noStr.charAt(c)!='('&&noStr.charAt(c)!=')'){
+                    no = no + noStr.charAt(c);
+                }
+            }
 //            TextView textView2 = findViewById(R.id.textView2);
 //            textView2.setText(no+"   "+Integer.toString(no.length()));
             try{
-                if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)){
+                if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1))){
                     if(cursor.getString(cursor.getColumnIndex("person")) == null){ //user-sent message
                         msgContent = msgContent+"                                        ";
                     }
                     msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("person"))+ '\n'; // if null, me; else contact
-
                 }
-            } catch (Exception e ){
-
+            } catch (Exception e){
+                msgContent = "Error loading messages";
             }
         }
         msg.setText(msgContent);
         cursor.close();
     }
 
-//    public void printMessage(){ //has both sent and received texts in one place (in correct chron order)
-//        //works for all american numbers, need to justify users
-//        TextView msg = findViewById(R.id.textView);
-//        String msgContent = "";
-//        final Uri SMS_INBOX = Uri.parse("content://sms");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) {
-//            String no = "3125324190";
-//            try{
-//                if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)){
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-////                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("_id"))+ '\n'; // increasing #
-////                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("thread_id"))+ '\n'; //same #
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("person"))+ '\n'; // if null, me; else contact
-////                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("type"))+ '\n'; //1 is them, 2 is me
-//
-//                }
-//            } catch (Exception e ){
-//
-//            }
-//        }
-//        msg.setText(msgContent);
-//        cursor.close();
-//    }
-
-
-//    public void printMessage(){ // displays sent
-//        TextView msg = findViewById(R.id.textView);
-//        String msgContent = "";
-//        final Uri SMS_INBOX = Uri.parse("content://sms/sent");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date desc limit 10");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) {
-//            try{
-//                if (cursor.getString(cursor.getColumnIndex("address")).equals("9172388614")){
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-//                }
-//            } catch (Exception e ){
-//
-//            }
-//
-//        }
-//        msg.setText(msgContent);
-//        cursor.close();
-//    }
-
-//    public void printMessage(){ //displays received
-//        TextView msg = findViewById(R.id.textView);
-//        String msgContent = "";
-//        final Uri SMS_INBOX = Uri.parse("content://sms/inbox");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date desc limit 10");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) {
-//            try{
-//                if (cursor.getString(cursor.getColumnIndex("address")).equals("9172388614")){
-//                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-//                }
-//            } catch (Exception e ){
-//
-//            }
-//
-//        }
-//        msg.setText(msgContent);
-//        cursor.close();
-//    }
-
-//    public void printMessage(){ //poc
-//        TextView msg = findViewById(R.id.textView);
-//        String msgContent = "";
-//        final Uri SMS_INBOX = Uri.parse("content://sms/");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date desc limit 10");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) { //change the desc limit to go as far back as you want, prints the one it stops on
-//            // Do something
-//            try{
-//                msgContent = msgContent + cursor.getString(cursor.getColumnIndex("body")) + '\n';
-//                msgContent = msgContent + cursor.getString(cursor.getColumnIndex("address")) + '\n';
-//                msgContent = msgContent + cursor.getString(cursor.getColumnIndex("address")).equals("227898") + '\n';
-////                if (!cursor.getString(cursor.getColumnIndex("address")).equals("227898")){
-////                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-////                }
-////                msg.setText(cursor.getString(cursor.getColumnIndex("address")));
-//            } catch (Exception e ){
-//
-//            }
-//
-//        }
-//        msg.setText(msgContent);
-//        cursor.close();
-//    }
-
-
-//    public void printMessage(){ //not working discernably
-//        TextView msg = findViewById(R.id.textView);
-//        final Uri SMS_INBOX = Uri.parse("content://mms-sms/conversations/");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date desc limit 4");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) { // prints final of messages i sent
-//            // Do something
-//            try{
-//                msg.setText(cursor.getString(cursor.getColumnIndex("body")));
-//            } catch (Exception e ){
-//
-//            }
-//        }
-//        cursor.close();
-//    }
-
-
-
-//    public void printMessage(){
-//        TextView msg = findViewById(R.id.textView);
-//        final Uri SMS_INBOX = Uri.parse("content://sms/sent");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date desc limit 3");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) { // prints final of messages i sent
-//            // Do something
-//            try{
-//                msg.setText(cursor.getString(cursor.getColumnIndex("body")));
-//            } catch (Exception e ){
-//
-//            }
-//        }
-//        cursor.close();
-//    }
-
-
-//    public void printMessage(){
-//        TextView msg = findViewById(R.id.textView);
-//        final Uri SMS_INBOX = Uri.parse("content://sms/");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date desc limit 3");
-//        cursor.moveToFirst();
-//        while(cursor.moveToNext()) { //change the desc limit to go as far back as you want, prints the one it stops on
-//            // Do something
-//            try{
-//                msg.setText(cursor.getString(cursor.getColumnIndex("body")));
-//            } catch (Exception e ){
-//
-//            }
-//        }
-//        cursor.close();
-//    }
-
-
-//    public void printMessage(){
-//        TextView msg = findViewById(R.id.textView);
-//        final Uri SMS_INBOX = Uri.parse("content://sms/inbox");
-//        Cursor cursor = getContentResolver().query(SMS_INBOX, null, "address = ?",
-//                new String[] {"3125324190"}, "date desc limit 1");
-//        if(cursor.moveToFirst()) {
-//            // Do something
-//            try{
-//                msg.setText(cursor.getString(cursor.getColumnIndex("body")));
-//            } catch (Exception e ){
-//
-//            }
-//        }
-//        cursor.close();
-//    }
 
 
 
 
+
+
+
+    public void setFontFromSettings() {
+        SettingsManager.onFontChange(this, (ViewGroup) findViewById(R.id.Conversation_Container));
+    }
 }
