@@ -29,6 +29,8 @@ public class Conversation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        applySettingsToTheme();
+
         setContentView(R.layout.activity_conversation);
 
         if (ActivityCompat.checkSelfPermission(this,
@@ -47,13 +49,12 @@ public class Conversation extends AppCompatActivity {
         }
 
 
-        setFontFromSettings();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        setFontFromSettings();
+        applySettingsToTheme();
     }
 
     @Override
@@ -210,7 +211,7 @@ public class Conversation extends AppCompatActivity {
 
 
 
-    public void setFontFromSettings() {
-        SettingsManager.onFontChange(this, (ViewGroup) findViewById(R.id.Conversation_Container));
+    public void applySettingsToTheme() {
+        SettingsManager.applySettingsToTheme(this);
     }
 }

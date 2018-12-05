@@ -9,7 +9,8 @@
     android:orientation="vertical">
 
     <TextView
-        style="@style/TextColor"
+        android:textSize="?attr/font_small"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -56,7 +57,7 @@
                     android:layout_weight="1"
                     android:contentDescription="@string/font_size"
                     android:gravity="center"
-                    style="@style/TextColor"
+                    android:textColor="@color/colorPrimaryDark"
                     android:text="@string/font_size"
                     android:textSize="30sp" />
 

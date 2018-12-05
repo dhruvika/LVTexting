@@ -22,14 +22,14 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        applySettingsToTheme();
         setContentView(R.layout.activity_settings);
-
-        onFontChange();
     }
 
-    public void onFontChange() {
-        SettingsManager.onFontChange(this, (ViewGroup) findViewById(R.id.Settings_Container));
+    public void applySettingsToTheme() {
+        SettingsManager.applySettingsToTheme(this);
     }
+
     public void onChangeFontSize(View v) {
 
         SharedPreferences sharedPref = SettingsManager.getSharedPreferences(this);
@@ -63,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Set preference (Try using commit instead of apply)
         sharedPref.edit().putInt(FONT_SIZE, newSize).apply();
-        onFontChange();
+        applySettingsToTheme();
     }
 }
 
