@@ -36,7 +36,7 @@ public class TextMessageFetcher {
                 String address = cursor.getString(1);
                 String body = cursor.getString(3);
                 Long dateMillis = cursor.getLong(2);
-                String date = getDate(dateMillis, "dd/MM/yyyy hh:mm:ss");
+                String date = getDate(dateMillis, "hh:mm aaa dd MMM");
 
                 sms.add("Name: " + address + "\n Date: " + date + "\n Message: " + body);
             }
@@ -65,7 +65,7 @@ public class TextMessageFetcher {
                 ArrayList<String> conversation = new ArrayList<>();
                 String address = cursor.getString(1);
                 Long dateMillis = cursor.getLong(2);
-                String date = getDate(dateMillis, "dd/MM/yyyy hh:mm:ss");
+                String date = getDate(dateMillis, "hh:mm aaa dd MMM");
                 String body = cursor.getString(4);
                 int read = cursor.getInt(3);
 
@@ -170,7 +170,8 @@ public class TextMessageFetcher {
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(milliSeconds);
-        return formatter.format(calendar.getTime());
+        String formattedDate = formatter.format(calendar.getTime());
+        return formattedDate;
     }
 
 }
