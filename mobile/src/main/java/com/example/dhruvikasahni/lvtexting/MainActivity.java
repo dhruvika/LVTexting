@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS};
+        String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS,
+                Manifest.permission.RECEIVE_SMS, Manifest.permission.GET_TASKS};
 
 
         if(!hasAllPermissions(MainActivity.this, permissions)) {
