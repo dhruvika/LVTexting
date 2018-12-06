@@ -2,9 +2,14 @@ package com.example.textmessageslibrary;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,14 +54,12 @@ public class TextMessageFetcher {
         return sms;
     }
 
-    // Fetches recent conversations with whether they are read/unread, who its with and the date of the last message.
-    public ArrayList<ArrayList<String>> fetchRecentConversations(){
-
+    public ArrayList<ArrayList<String>> fetchUnreadConversations(){
         ArrayList<ArrayList<String>> allConversations = new ArrayList<>();
         Set<String> addresses = new HashSet<>();
         Uri uri = Uri.parse("content://mms-sms/conversations");
         Cursor cursor = this.activity.getContentResolver().query(uri, new String[]{"_id", "address", "date", "read", "body"},
-                null, null, "date DESC");
+                "read=0", null, "date DESC");
 
         try {
             cursor.moveToFirst();
@@ -71,12 +74,45 @@ public class TextMessageFetcher {
 
                 if(!addresses.contains(address)){
                     addresses.add(address);
-                    if(read == 1){
-                        conversation.add("unread");
-                    }
-                    else {
-                        conversation.add("read");
-                    }
+                    conversation.add("unread");
+                    conversation.add(address);
+                    conversation.add(date);
+                    allConversations.add(conversation);
+                }
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        catch(NullPointerException e){
+            // do nothing
+        }
+
+        return allConversations;
+
+    }
+    // Fetches recent conversations with whether they are read/unread, who its with and the date of the last message.
+    public ArrayList<ArrayList<String>> fetchReadConversations(){
+
+        ArrayList<ArrayList<String>> allConversations = new ArrayList<>();
+        Set<String> addresses = new HashSet<>();
+        Uri uri = Uri.parse("content://mms-sms/conversations");
+        Cursor cursor = this.activity.getContentResolver().query(uri, new String[]{"_id", "address", "date", "read", "body"},
+                "read=1", null, "date DESC");
+
+        try {
+            cursor.moveToFirst();
+            int totalCount = cursor.getCount();
+            for (int i = 0; i < totalCount; i++) {
+                ArrayList<String> conversation = new ArrayList<>();
+                String address = cursor.getString(1);
+                Long dateMillis = cursor.getLong(2);
+                String date = getDate(dateMillis, "hh:mm aaa dd MMM");
+                String body = cursor.getString(4);
+                int read = cursor.getInt(3);
+
+                if(!addresses.contains(address)){
+                    addresses.add(address);
+                    conversation.add("read");
                     conversation.add(address);
                     conversation.add(date);
                     allConversations.add(conversation);
@@ -91,6 +127,7 @@ public class TextMessageFetcher {
 
         return allConversations;
     }
+
 
     /**
      * Return the name of the contact if it exists in the phonebook.

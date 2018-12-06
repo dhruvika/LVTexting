@@ -1,9 +1,12 @@
 package com.example.dhruvikasahni.lvtexting;
 
+//import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.TableLayout;
 
 import java.util.List;
 
@@ -18,12 +21,12 @@ public class SMSReceiver extends BroadcastReceiver {
 
         String mainActivityName = "MainActivity";
 
-        String currentActivity = alltasks.get(0).topActivity.getClassName();
+        String currentActivityName = alltasks.get(0).topActivity.getClassName();
         String packageName = "com.example.dhruvikasahni.lvtexting.";
 
-        if (currentActivity.equals(packageName + mainActivityName)) {
-            Intent mainActivity = new Intent(context, MainActivity.class);
-            context.startActivity(mainActivity);
+        if (currentActivityName.equals(packageName + mainActivityName)) {
+            intent.setAction("android.provider.Telephony.SMS_RECEIVED");
+            context.sendBroadcast(intent);
         }
     }
 }

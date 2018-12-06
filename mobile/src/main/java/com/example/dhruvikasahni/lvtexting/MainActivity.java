@@ -1,14 +1,18 @@
 package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsMessage;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,8 +30,11 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     TextToSpeech t1;
@@ -38,9 +45,11 @@ public class MainActivity extends AppCompatActivity {
     Boolean restart = false;
     Boolean paused = false;
 
+    private BroadcastReceiver smsReceived = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS,
@@ -77,14 +86,12 @@ public class MainActivity extends AppCompatActivity {
                         if (! t1.isSpeaking()) {
                             readAloud.setBackgroundResource(R.drawable.stop);
                             TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
-                            if (messageFetcher.fetchRecentConversations().isEmpty()) {
+                            if (messageFetcher.fetchReadConversations().isEmpty() && messageFetcher.fetchUnreadConversations().isEmpty()) {
                                 t1.speak("No new messages", TextToSpeech.QUEUE_FLUSH, null);
                                 return;
                             }
-                            for (ArrayList<String> conversationInfo : messageFetcher.fetchRecentConversations()) {
-                                if (conversationInfo.get(0).equals("read")) {
-                                    messageList.add(conversationInfo);
-                                }
+                            for (ArrayList<String> conversationInfo : messageFetcher.fetchUnreadConversations()) {
+                                messageList.add(conversationInfo);
                             }
                             while (messageList.size() != 0 && !restart) {
                                 currentMessage = messageList.remove(0);
@@ -99,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                                         speak += ",";
                                     }
                                 }
-                                SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                                SimpleDateFormat inputFormat = new SimpleDateFormat("hh:mm aaa dd MMM");
                                 SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d yyyy, HH:mm aaa");
                                 try {
                                     Date parsed = inputFormat.parse(currentMessage.get(2));
@@ -166,8 +173,55 @@ public class MainActivity extends AppCompatActivity {
             case 1: {
                 // permission granted
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    TableLayout dashboard = findViewById(R.id.Dashboard);
-                    loadSMSData(dashboard);
+                    loadSMSData();
+
+                    // Register a new broadcast receiver
+                        BroadcastReceiver smsReceived = new BroadcastReceiver() {
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
+
+//                                Bundle bundle = intent.getExtras();           //---get the SMS message passed in---
+//                                SmsMessage[] msgs = null;
+//                                String msg_from;
+//                                HashMap<String, Long> newAddresses = new HashMap<>();
+//
+//                                if (bundle != null) {
+//                                    //---retrieve the SMS message received---
+//                                    try {
+//                                        Object[] pdus = (Object[]) bundle.get("pdus");
+//                                        msgs = new SmsMessage[pdus.length];
+//                                        for (int i = 0; i < msgs.length; i++) {
+//                                            msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+//                                            msg_from = msgs[i].getOriginatingAddress();
+//                                            Long msgTime = msgs[i].getTimestampMillis();
+//                                            if(newAddresses.containsKey(msg_from)){
+//                                                // if earlier time, note this time - CHECK
+//                                                if(msgTime > newAddresses.get(msg_from)){
+//                                                    newAddresses.put(msg_from, msgTime);
+//                                                }
+//                                            }
+//                                            else {
+//                                                newAddresses.put(msg_from, msgTime);
+//                                            }
+//                                        }
+//                                    } catch (Exception e) {}
+//
+                                TableLayout dashboard = MainActivity.this.findViewById(R.id.Dashboard);
+
+                                final long changeTime = 400L;
+                                dashboard.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        clearDashboard();
+                                        loadSMSData();
+                                    }
+                                }, changeTime);
+                                }
+                        };
+
+                    IntentFilter intentFilter = new IntentFilter();
+                    intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+                    registerReceiver(smsReceived, intentFilter);
                 }
 
                 else {
@@ -177,71 +231,96 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // If the broadcast receiver is not null then unregister it.
+        // This action is better placed in activity onDestroy() method.
+        if(this.smsReceived!=null) {
+            unregisterReceiver(this.smsReceived);
+        }
+    }
+
+
     public void launchSettingsActivity(View v) {
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
     }
 
-    public void loadSMSData(TableLayout dashboard){
+    public void clearDashboard(){
+        TableLayout dashboard = MainActivity.this.findViewById(R.id.Dashboard);
+        dashboard.removeAllViews();
+    }
 
+    public void loadSMSData(){
+        TableLayout dashboard = MainActivity.this.findViewById(R.id.Dashboard);
         TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
-
-        if (messageFetcher.fetchRecentConversations().isEmpty()) {
-            return;
-        }
-
-        for (ArrayList<String> conversationInfo : messageFetcher.fetchRecentConversations()){
-            TableRow row = new TableRow(this);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-            row.setLayoutParams(lp);
-
-            // Create the required fields
-            TextView readText = new TextView(this);
-            if(conversationInfo.get(0).equals("unread")){
-                readText.setText("");
-            }
-            else{
-                readText.setText("\u25CF  ");
-            }
-            TextView addressText = new TextView(this);
-            String contactName = messageFetcher.getContactName(conversationInfo.get(1));
-            if(contactName != null){
-                addressText.setText(contactName);
-            }
-            else{
-                addressText.setText(conversationInfo.get(1));
-            }
-            TextView dateText = new TextView(this);
-            dateText.setText(conversationInfo.get(2));
-
-            // Add the fields to the row
-            row.addView(readText);
-            row.addView(addressText);
-            row.addView(dateText);
-
-            // Add a listener for clicks
-            row.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    TextMessageFetcher messageFetcher2 = new TextMessageFetcher(MainActivity.this);
-                    TableRow tableRow = (TableRow) v;
-                    TextView phoneNumText = (TextView) tableRow.getChildAt(1);
-                    String address = phoneNumText.getText().toString();
-                    Intent intent = new Intent(MainActivity.this, Conversation.class);
-                    String phoneNumber = messageFetcher2.getContactNumber2(address);
-                    if(phoneNumber != null){
-                        address = phoneNumber;
-                    }
-                    intent.putExtra("phoneNumber",address);
-                    startActivity(intent);
-                }});
-
-            // Add the row to the dashboard
+        HashSet<String> addresses = new HashSet<>();
+        for (ArrayList<String> conversationInfo : messageFetcher.fetchUnreadConversations()){
+            TableRow row = addDashboardRow(conversationInfo, messageFetcher);
+            addresses.add(conversationInfo.get(1));
             dashboard.addView(row);
         }
+
+        for (ArrayList<String> conversationInfo : messageFetcher.fetchReadConversations()){
+            TableRow row = addDashboardRow(conversationInfo, messageFetcher);
+            if (!addresses.contains(conversationInfo.get(1))) dashboard.addView(row);
+        }
     }
+
+    public TableRow addDashboardRow(ArrayList<String> conversationInfo, TextMessageFetcher messageFetcher){
+        TableRow row = new TableRow(this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+        row.setLayoutParams(lp);
+
+        // Create the required fields
+        TextView readText = new TextView(this);
+        if(conversationInfo.get(0).equals("read")){
+            readText.setText("");
+        }
+        else{
+            readText.setText("\u2B24    ");
+        }
+        TextView addressText = new TextView(this);
+        String contactName = messageFetcher.getContactName(conversationInfo.get(1));
+        if(contactName != null){
+            addressText.setText(contactName);
+        }
+        else{
+            addressText.setText(conversationInfo.get(1));
+        }
+        TextView dateText = new TextView(this);
+        dateText.setText(conversationInfo.get(2));
+
+        // Add the fields to the row
+        row.addView(readText);
+        row.addView(addressText);
+        row.addView(dateText);
+
+        // Add a listener for clicks
+        row.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                TextMessageFetcher messageFetcher2 = new TextMessageFetcher(MainActivity.this);
+                TableRow tableRow = (TableRow) v;
+                TextView phoneNumText = (TextView) tableRow.getChildAt(1);
+                String address = phoneNumText.getText().toString();
+                Intent intent = new Intent(MainActivity.this, Conversation.class);
+                String phoneNumber = messageFetcher2.getContactNumber2(address);
+                if(phoneNumber != null){
+                    address = phoneNumber;
+                }
+                intent.putExtra("phoneNumber",address);
+                startActivity(intent);
+            }});
+        return row;
+    }
+
 
 
     public void setFontFromSettings() {
         SettingsManager.onFontChange(this, (ViewGroup) findViewById(R.id.Dashboard_Container));
     }
 }
+
+
