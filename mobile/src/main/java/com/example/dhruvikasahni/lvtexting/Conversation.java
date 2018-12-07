@@ -2,6 +2,7 @@ package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,7 +21,11 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Conversation extends AppCompatActivity {
@@ -141,9 +146,6 @@ public class Conversation extends AppCompatActivity {
 
     public void sendSms(){
         Button sendButton = (Button) findViewById(R.id.sendButton);
-
-
-
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -164,6 +166,22 @@ public class Conversation extends AppCompatActivity {
                 smsManager.sendTextMessage
                         (smsNumber, scAddress, sms,
                                 sentIntent, deliveryIntent);
+
+                // Put sent SMS in db : Code added by dhruvika - feel free to change!
+                ContentValues values = new ContentValues();
+                values.put("address", smsNumber);
+                values.put("body", sms);
+                values.put("read", 1);
+
+                // Get current date time
+                Date date = new Date();
+                String strDateFormat = "hh:mm aaa dd MMM";
+                DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+                String formattedDate = dateFormat. format(date);
+
+                values.put("date", formattedDate);
+                getContentResolver().insert(Uri.parse("content://sms/sent"), values);
+
             }
         });
     }

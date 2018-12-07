@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS,
-                Manifest.permission.RECEIVE_SMS, Manifest.permission.GET_TASKS};
+                Manifest.permission.RECEIVE_SMS};
 
 
         if(!hasAllPermissions(MainActivity.this, permissions)) {
@@ -116,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                                 t1.speak(speak, TextToSpeech.QUEUE_ADD, null);
-                                while (t1.isSpeaking()) {};
+                                while (t1.isSpeaking()) {}
                             }
                             restart = false;
                             messageList.clear();
@@ -166,6 +168,38 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void deleteAddress(String addressName){
+        String phoneNumber = addressName;
+        TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
+
+        if(messageFetcher.getContactNumber2(addressName) != null)
+            phoneNumber = messageFetcher.getContactNumber2(addressName);
+
+        Uri uriSms = Uri.parse("content://sms/inbox");
+        Cursor c = this.getContentResolver().query(
+                uriSms,
+                new String[] { "_id", "thread_id", "address", "person",
+                        "date", "body" }, null, null, null);
+
+
+        if (c != null && c.moveToFirst()) {
+            do {
+//                long id = c.getLong(0);
+                String address = c.getString(2);
+//                String body = c.getString(5);
+
+                if(address.equals(phoneNumber)) {
+//                    this.getContentResolver().delete(
+//                            Uri.parse("content://sms/" + id), "date=?",
+//                            new String[]{c.getString(4)});
+                    int thread_id = c.getInt(1); //get the thread_id
+                    this.getContentResolver().delete(Uri.parse("content://sms/conversations/" + thread_id),null,null);
+                    break;
+                }
+
+            } while (c.moveToNext());
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -173,39 +207,14 @@ public class MainActivity extends AppCompatActivity {
             case 1: {
                 // permission granted
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    loadSMSData();
+//                    deleteAddress("6505551355");
                     loadSMSData();
 
                     // Register a new broadcast receiver
                         BroadcastReceiver smsReceived = new BroadcastReceiver() {
                             @Override
                             public void onReceive(Context context, Intent intent) {
-
-//                                Bundle bundle = intent.getExtras();           //---get the SMS message passed in---
-//                                SmsMessage[] msgs = null;
-//                                String msg_from;
-//                                HashMap<String, Long> newAddresses = new HashMap<>();
-//
-//                                if (bundle != null) {
-//                                    //---retrieve the SMS message received---
-//                                    try {
-//                                        Object[] pdus = (Object[]) bundle.get("pdus");
-//                                        msgs = new SmsMessage[pdus.length];
-//                                        for (int i = 0; i < msgs.length; i++) {
-//                                            msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-//                                            msg_from = msgs[i].getOriginatingAddress();
-//                                            Long msgTime = msgs[i].getTimestampMillis();
-//                                            if(newAddresses.containsKey(msg_from)){
-//                                                // if earlier time, note this time - CHECK
-//                                                if(msgTime > newAddresses.get(msg_from)){
-//                                                    newAddresses.put(msg_from, msgTime);
-//                                                }
-//                                            }
-//                                            else {
-//                                                newAddresses.put(msg_from, msgTime);
-//                                            }
-//                                        }
-//                                    } catch (Exception e) {}
-//
                                 TableLayout dashboard = MainActivity.this.findViewById(R.id.Dashboard);
 
                                 final long changeTime = 400L;
