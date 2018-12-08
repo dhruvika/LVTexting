@@ -46,10 +46,8 @@ public class MessageGridAdapter extends BaseAdapter {
 
 
 
-        if (i%2==1){ //if user-sent
+        if (i%2==1){ //if user-sent then it's right-side message (therefore, will set height for row)
             String msgPrev = messages[i-1];
-//            String curr = tv.getText().toString();
-//            tv.setText(Integer.toString(msgPrev.length())+' '+Integer.toString(msg.length())+' '+curr);
             if (msgPrev.length()>msg.length()){ // if left is longer than right
                 tv.setText(msgPrev); // set tv to left
             }
@@ -62,14 +60,13 @@ public class MessageGridAdapter extends BaseAdapter {
 
                 int lineCount = tv.getLineCount(); // get line count for tv
                 tv.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,(lineCount+1)*tv.getLineHeight()));//set height for self(if left) or longer (if right)
-                tv.setText(msg);
+                tv.setText(msg); //reset tv text in case it was set to left to obtain line count
 
 
             }
         });
         if(i%2==1){ //if user-sent message
             tv.setGravity(RIGHT);
-//            tv.setText(msg); //reset to message
         }
         return tv;
 
