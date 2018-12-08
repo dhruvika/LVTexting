@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="FontStyle">
-        <attr name="font_small" format="dimension" />
-        <attr name="font_medium" format="dimension" />
+    <declare-styleable name="FontSize">
+        <attr name="font_size" format="dimension"/>
     </declare-styleable>
 </resources>

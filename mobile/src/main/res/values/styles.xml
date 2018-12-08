@@ -15,17 +15,17 @@
         <item name="android:colorButtonNormal">@color/colorBlack</item>
     </style>
 
-    <style name="FontStyle">
+    <style name="FontSize">
     </style>
 
-    <style name="FontStyle.Small">
-        <item name="font_small">14sp</item>
-        <item name="font_medium">16sp</item>
-    </style>
-
-    <style name="FontStyle.Medium">
-        <item name="font_small">18sp</item>
-        <item name="font_medium">40sp</item>
-    </style>
+    <style name="FontSize.S1"><item name="font_size">12sp</item></style>
+    <style name="FontSize.S2"><item name="font_size">14sp</item></style>
+    <style name="FontSize.S3"><item name="font_size">16sp</item></style>
+    <style name="FontSize.S4"><item name="font_size">18sp</item></style>
+    <style name="FontSize.S5"><item name="font_size">20sp</item></style>
+    <style name="FontSize.S6"><item name="font_size">22sp</item></style>
+    <style name="FontSize.S7"><item name="font_size">24sp</item></style>
+    <style name="FontSize.S8"><item name="font_size">26sp</item></style>
+    <style name="FontSize.S9"><item name="font_size">28sp</item></style>
 
 </resources>

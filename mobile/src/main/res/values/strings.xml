@@ -8,4 +8,8 @@
     <string name="font_size">Font Size</string>
     <string name="font_size_up_arrow">Font Size Up Arrow</string>
     <string name="font_size_down_arrow">Font Size Down Arrow</string>
+
+    <string name="line_space">Line Spacing</string>
+    <string name="line_space_up_arrow">Line Spacing Up Arrow</string>
+    <string name="line_space_down_arrow">Line Spacing Down Arrow</string>
 </resources>
