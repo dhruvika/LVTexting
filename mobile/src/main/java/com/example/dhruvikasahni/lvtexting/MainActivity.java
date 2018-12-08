@@ -3,6 +3,7 @@ package com.example.dhruvikasahni.lvtexting;
 import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     intent.putExtra("phoneNumber", address);
                     startActivity(intent);
+
                 }
             }
         });
@@ -316,11 +318,14 @@ public class MainActivity extends AppCompatActivity {
                 String address = phoneNumText.getText().toString();
                 Intent intent = new Intent(MainActivity.this, Conversation.class);
                 String phoneNumber = messageFetcher2.getContactNumber2(address);
+
                 if(phoneNumber != null){
                     address = phoneNumber;
                 }
                 intent.putExtra("phoneNumber",address);
+
                 startActivity(intent);
+
             }});
         return row;
     }

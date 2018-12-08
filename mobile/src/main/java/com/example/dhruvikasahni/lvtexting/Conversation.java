@@ -69,6 +69,24 @@ public class Conversation extends AppCompatActivity {
                         (Manifest.permission.SEND_SMS)
                         && grantResults[0] ==
                         PackageManager.PERMISSION_GRANTED) {
+
+                    // Mark all unread messages from this conversation as read
+                    Bundle bundle = getIntent().getExtras();
+                    String phoneNumber = bundle.getString("phoneNumber");
+                    Uri uri = Uri.parse("content://sms/inbox");
+                    Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                    try{
+                        while (cursor.moveToNext()) {
+                            String addressSeen = cursor.getString(cursor.getColumnIndex("address"));
+                            if (addressSeen.equals(phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
+                                String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
+                                ContentValues values = new ContentValues();
+                                values.put("read", true);
+                                getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + SmsMessageId, null);
+                            }
+                        }
+                    }catch(Exception e) {}
+
                     sendSms();
 //                    printMessage();
                     setGrid();
