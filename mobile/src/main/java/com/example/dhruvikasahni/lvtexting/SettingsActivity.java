@@ -1,21 +1,9 @@
 package com.example.dhruvikasahni.lvtexting;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -49,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
         }
         applySettingsToTheme();
+        SettingsManager.applyThemeToView(this, (ViewGroup) findViewById(R.id.Settings_Container));
     }
 }
 
