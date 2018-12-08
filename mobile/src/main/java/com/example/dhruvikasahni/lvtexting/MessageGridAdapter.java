@@ -15,7 +15,7 @@ import static android.view.Gravity.RIGHT;
 public class MessageGridAdapter extends BaseAdapter {
 
     Context context;
-    private final String [] messages;
+    final String [] messages;
     View view;
 
     public MessageGridAdapter(Context context, String[] messages) {
@@ -41,23 +41,35 @@ public class MessageGridAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         final TextView tv = new TextView(context);
+        final String msg = messages[i];
         tv.setText(messages[i]);
-        //TextView item = (TextView) getItem(i);
-        int lineCount;
+
+
+
+        if (i%2==1){ //if user-sent
+            String msgPrev = messages[i-1];
+//            String curr = tv.getText().toString();
+//            tv.setText(Integer.toString(msgPrev.length())+' '+Integer.toString(msg.length())+' '+curr);
+            if (msgPrev.length()>msg.length()){ // if left is longer than right
+                tv.setText(msgPrev); // set tv to left
+            }
+        }
+
         tv.post(new Runnable() {
 
             @Override
             public void run() {
 
-                int lineCount2 = tv.getLineCount();
-//                tv.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,tv.getLineCount()*tv.getLineHeight()*3));
+                int lineCount = tv.getLineCount(); // get line count for tv
+                tv.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,(lineCount+1)*tv.getLineHeight()));//set height for self(if left) or longer (if right)
+                tv.setText(msg);
 
 
             }
         });
-        tv.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,tv.getLineHeight()*4));//TODO: dynamically adjust height
         if(i%2==1){ //if user-sent message
             tv.setGravity(RIGHT);
+//            tv.setText(msg); //reset to message
         }
         return tv;
 
