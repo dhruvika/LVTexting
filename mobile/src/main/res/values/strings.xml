@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LVTexting</string>
+    <string name="app_name">SMS</string>
     <string name="settings_button">Settings</string>
 
     <string name="sample_text">Sample Text</string>

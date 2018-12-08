@@ -43,9 +43,9 @@ public class Conversation extends AppCompatActivity {
                     new String[]{Manifest.permission.SEND_SMS},
                     1);
         } else { //Permission already given
+
             sendSms();
             setGrid();
-            discreteScroll();
 
 
         }
@@ -97,12 +97,10 @@ public class Conversation extends AppCompatActivity {
 
     }
 
-    public void discreteScroll(){
-        Button up = findViewById(R.id.upButton);
-        Button down = findViewById(R.id.downButton);
-
-        
-    }
+//    public void discreteScroll(MessageGridAdapter adapter){
+//
+//
+//    }
 
     public String parseNumber(){ //@Yasmin, here is the helper fxn to obtain the number 
         Bundle bundle = getIntent().getExtras();
@@ -123,7 +121,7 @@ public class Conversation extends AppCompatActivity {
 
     public void setGrid(){
 
-        GridView messages = findViewById(R.id.messages);
+        final GridView messages = findViewById(R.id.messages);
 
 
         List<String> messagesList = new ArrayList<String>();
@@ -169,7 +167,7 @@ public class Conversation extends AppCompatActivity {
         cursor.close();
 
 
-        MessageGridAdapter  ad = new MessageGridAdapter(this, messagesArray);
+        final MessageGridAdapter  ad = new MessageGridAdapter(this, messagesArray);
         messages.setAdapter(ad);
 
 //        messages.smoothScrollToPosition(); // shifted things slightly down
@@ -183,12 +181,34 @@ public class Conversation extends AppCompatActivity {
 //            messages.setSelection((int)(ad.getCount()/2+0.5));
 //        }
         messages.setSelection(ad.getCount());
-        tv.setText(Integer.toString(ad.getCount()));
+        tv.setText(Integer.toString(ad.getCount())+' '+messages.getCount()+' '+messages.getItemAtPosition(messages.getVerticalScrollbarPosition()));
+
+        final int currentLine = ad.getCount();
+
+        Button upButton = findViewById(R.id.upButton);
+        Button downButton = findViewById(R.id.downButton);
+
+        upButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                messages.setSelection(ad.getCount()/2);
+
+            }
+        });
+
+        downButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                messages.setSelection(ad.getCount()+10);
+
+            }
+        });
+
     }
 
 
     public void sendSms(){
-        Button sendButton = (Button) findViewById(R.id.sendButton);
+        Button sendButton = findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
