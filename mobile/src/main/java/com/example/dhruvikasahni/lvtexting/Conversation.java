@@ -98,6 +98,23 @@ public class Conversation extends AppCompatActivity {
 
     }
 
+    public String parseNumber(){ //@Yasmin, here is the helper fxn to obtain the number 
+        Bundle bundle = getIntent().getExtras();
+        String noStr = bundle.getString("phoneNumber");
+        String no = "";
+        for (int c=0; c<noStr.length();c++){
+            if (Character.isDigit(noStr.charAt(c))){
+                no = no + noStr.charAt(c);
+            }
+
+        }
+        if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
+            no = no.substring(1);
+        }
+
+        return no;
+    }
+
     public void setGrid(){
 
         GridView messages = findViewById(R.id.messages);
@@ -115,19 +132,30 @@ public class Conversation extends AppCompatActivity {
         Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
         cursor.moveToFirst();
         while(cursor.moveToNext()) {
-            String noStr = bundle.getString("phoneNumber");
-            String no = "";
-            for (int c=0; c<noStr.length();c++){
-                if (Character.isDigit(noStr.charAt(c))){//(noStr.charAt(c)!='+'&&noStr.charAt(c)!='-'&&noStr.charAt(c)!=' '&&noStr.charAt(c)!='('&&noStr.charAt(c)!=')'){
-                    no = no + noStr.charAt(c);
-                }
-                if (no.length()>10){//TODO: fix longer automated number parsing
-                    no = no.substring(1);
-                }
-            }
-//            TextView textView2 = findViewById(R.id.textView2);
-//            String allnos = "";
-//            textView2.setText(no+"   "+Integer.toString(no.length()));
+//            String noStr = bundle.getString("phoneNumber");
+//            String no = "";
+//
+////            String ct ="";
+//
+//            for (int c=0; c<noStr.length();c++){
+//                if (Character.isDigit(noStr.charAt(c))){
+//                    no = no + noStr.charAt(c);
+//                }
+//
+//            }
+////                ct = ct+ noStr+"   "+Integer.toString(noStr.length())+'\n';
+////                ct = ct + no+"   "+Integer.toString(no.length())+'\n';
+//                if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
+//                    no = no.substring(1);
+//                }
+//
+////            ct = ct + no+"   "+Integer.toString(no.length());
+////            TextView textView2 = findViewById(R.id.textView2);
+////            textView2.setText(ct);
+            String no = parseNumber();
+
+
+
             try{
 //                allnos = allnos + no + '\n';
                 if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1))){
@@ -202,41 +230,6 @@ public class Conversation extends AppCompatActivity {
 
             }
         });
-    }
-
-    public void printMessage(){ //has both sent and received texts in one place (in correct chron order)
-        //works for all american numbers, AND justifies users
-
-        Bundle bundle = getIntent().getExtras();
-
-        TextView msg = findViewById(R.id.textView);
-        String msgContent = "";
-        final Uri SMS_INBOX = Uri.parse("content://sms");
-        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
-        cursor.moveToFirst();
-        while(cursor.moveToNext()) {
-            String noStr = bundle.getString("phoneNumber");
-            String no = "";
-            for (int c=0; c<noStr.length();c++){
-                if (noStr.charAt(c)!='+'&&noStr.charAt(c)!='-'&&noStr.charAt(c)!=' '&&noStr.charAt(c)!='('&&noStr.charAt(c)!=')'){
-                    no = no + noStr.charAt(c);
-                }
-            }
-//            TextView textView2 = findViewById(R.id.textView2);
-//            textView2.setText(no+"   "+Integer.toString(no.length()));
-            try{
-                if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1))){
-                    if(cursor.getString(cursor.getColumnIndex("person")) == null){ //user-sent message
-                        msgContent = msgContent+"                                        ";
-                    }
-                    msgContent = msgContent +cursor.getString(cursor.getColumnIndex("body"))+ '\n';
-                }
-            } catch (Exception e){
-                msgContent = "Error loading messages";
-            }
-        }
-        msg.setText(msgContent);
-        cursor.close();
     }
 
 
