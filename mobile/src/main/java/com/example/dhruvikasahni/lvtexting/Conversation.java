@@ -80,6 +80,23 @@ public class Conversation extends AppCompatActivity {
 
     }
 
+    public String parseNumber(){ //@Yasmin, here is the helper fxn to obtain the number 
+        Bundle bundle = getIntent().getExtras();
+        String noStr = bundle.getString("phoneNumber");
+        String no = "";
+        for (int c=0; c<noStr.length();c++){
+            if (Character.isDigit(noStr.charAt(c))){
+                no = no + noStr.charAt(c);
+            }
+
+        }
+        if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
+            no = no.substring(1);
+        }
+
+        return no;
+    }
+
     public void setGrid(){
 
         GridView messages = findViewById(R.id.messages);
@@ -97,26 +114,27 @@ public class Conversation extends AppCompatActivity {
         Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
         cursor.moveToFirst();
         while(cursor.moveToNext()) {
-            String noStr = bundle.getString("phoneNumber");
-            String no = "";
-
-//            String ct ="";
-
-            for (int c=0; c<noStr.length();c++){
-                if (Character.isDigit(noStr.charAt(c))){
-                    no = no + noStr.charAt(c);
-                }
-
-            }
-//                ct = ct+ noStr+"   "+Integer.toString(noStr.length())+'\n';
-//                ct = ct + no+"   "+Integer.toString(no.length())+'\n';
-                if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
-                    no = no.substring(1);
-                }
-
-//            ct = ct + no+"   "+Integer.toString(no.length());
-//            TextView textView2 = findViewById(R.id.textView2);
-//            textView2.setText(ct);
+//            String noStr = bundle.getString("phoneNumber");
+//            String no = "";
+//
+////            String ct ="";
+//
+//            for (int c=0; c<noStr.length();c++){
+//                if (Character.isDigit(noStr.charAt(c))){
+//                    no = no + noStr.charAt(c);
+//                }
+//
+//            }
+////                ct = ct+ noStr+"   "+Integer.toString(noStr.length())+'\n';
+////                ct = ct + no+"   "+Integer.toString(no.length())+'\n';
+//                if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
+//                    no = no.substring(1);
+//                }
+//
+////            ct = ct + no+"   "+Integer.toString(no.length());
+////            TextView textView2 = findViewById(R.id.textView2);
+////            textView2.setText(ct);
+            String no = parseNumber();
 
 
 
