@@ -34,7 +34,7 @@ public class Conversation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        applySettingsToTheme();
+        SettingsManager.applySettingsToTheme(this);
 
         setContentView(R.layout.activity_conversation);
 
@@ -57,9 +57,10 @@ public class Conversation extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        applySettingsToTheme();
+    protected void onResume() {
+        super.onResume();
+        if(SettingsManager.shouldApplyToConvo())
+            this.recreate();
     }
 
     @Override
@@ -221,8 +222,4 @@ public class Conversation extends AppCompatActivity {
 
 
 
-
-    public void applySettingsToTheme() {
-        SettingsManager.applySettingsToTheme(this);
-    }
 }

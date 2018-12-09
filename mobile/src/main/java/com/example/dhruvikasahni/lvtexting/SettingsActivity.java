@@ -10,12 +10,8 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        applySettingsToTheme();
-        setContentView(R.layout.activity_settings);
-    }
-
-    public void applySettingsToTheme() {
         SettingsManager.applySettingsToTheme(this);
+        setContentView(R.layout.activity_settings);
     }
 
     public void onChangePref(View v) {
@@ -36,7 +32,8 @@ public class SettingsActivity extends AppCompatActivity {
                 SettingsManager.changeFontSize(this, -1);
                 break;
         }
-        applySettingsToTheme();
+        SettingsManager.markChange();
+        SettingsManager.applySettingsToTheme(this);
         SettingsManager.applyThemeToView(this, (ViewGroup) findViewById(R.id.Settings_Container));
     }
 }

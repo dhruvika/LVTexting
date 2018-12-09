@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        applySettingsToTheme();
+        SettingsManager.applySettingsToTheme(this);
         
         setContentView(R.layout.activity_main);
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS,
@@ -155,9 +155,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        applySettingsToTheme();
+    protected void onResume() {
+        super.onResume();
+        if(SettingsManager.shouldApplyToMain())
+            this.recreate();
     }
 
     public boolean hasAllPermissions(Context context, String[] permissions){
@@ -324,10 +325,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }});
         return row;
-    }
-
-    public void applySettingsToTheme() {
-        SettingsManager.applySettingsToTheme(this);
     }
 }
 

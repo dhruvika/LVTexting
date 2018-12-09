@@ -23,6 +23,9 @@ public class SettingsManager {
         return sharedPref;
     }
 
+    private static Boolean appliedToMain = true;
+    private static Boolean appliedToConvo = true;
+
     private static final String FONT_SIZE = "FONT_SIZE";
 
     public static void applySettingsToTheme(Context context) {
@@ -84,6 +87,7 @@ public class SettingsManager {
             textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
         }
     }
+
     private static List<TextView> getViewsFromGroup(ViewGroup viewGroup) {
         /*
         Recursive method that finds all textViews in given viewGroup and returns them as a list
@@ -102,6 +106,25 @@ public class SettingsManager {
             }
         }
         return viewList;
+    }
+
+    public static void markChange() {
+        appliedToMain = false;
+        appliedToConvo = false;
+    }
+
+    public static boolean shouldApplyToMain() {
+        if (appliedToMain)
+            return false;
+        appliedToMain = true;
+        return true;
+    }
+
+    public static boolean shouldApplyToConvo() {
+        if (appliedToConvo)
+            return false;
+        appliedToConvo = true;
+        return true;
     }
 
     public static void changeFontSize(Context context, int delta) {
