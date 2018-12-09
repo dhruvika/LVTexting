@@ -120,80 +120,83 @@ public class Conversation extends AppCompatActivity {
 
 
     public void setGrid(){
+        String no = parseNumber();
+        if (!no.equals("")){
+            final GridView messages = findViewById(R.id.messages);
 
-        final GridView messages = findViewById(R.id.messages);
+
+            List<String> messagesList = new ArrayList<String>();
+            int previous = 1; //0:other, 1:user
+
+            //works for all American numbers, AND justifies users
+
+            Bundle bundle = getIntent().getExtras();
+
+            final Uri SMS_INBOX = Uri.parse("content://sms");
+            Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
+            cursor.moveToFirst();
+            TextView tv = findViewById(R.id.textView2);
+            while(cursor.moveToNext()) {
 
 
-        List<String> messagesList = new ArrayList<String>();
-        int previous = 1; //0:other, 1:user
-
-        //works for all American numbers, AND justifies users
-
-        Bundle bundle = getIntent().getExtras();
-
-        final Uri SMS_INBOX = Uri.parse("content://sms");
-        Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
-        cursor.moveToFirst();
-        TextView tv = findViewById(R.id.textView2);
-        while(cursor.moveToNext()) {
-            String no = parseNumber();
-
-            try{
-                if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1))){
-                    if(cursor.getString(cursor.getColumnIndex("type")).equals("2")){ //user-sent message
-                        if(previous==1){//previous message also sent by me
-                            messagesList.add("");
-                        } else{
-                            messagesList.add("");
-                            messagesList.add("");
+                try{
+                    if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1))){
+                        if(cursor.getString(cursor.getColumnIndex("type")).equals("2")){ //user-sent message
+                            if(previous==1){//previous message also sent by me
+                                messagesList.add("");
+                            } else{
+                                messagesList.add("");
+                                messagesList.add("");
+                            }
+                            previous = 1;
+                        } else { //other-sent message
+                            if(previous == 0){//previous message also sent by other
+                                messagesList.add("");
+                            }
+                            previous = 0;
                         }
-                        previous = 1;
-                    } else { //other-sent message
-                        if(previous == 0){//previous message also sent by other
-                            messagesList.add("");
-                        }
-                        previous = 0;
+                        messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+                        tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
                     }
-                    messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
-                    tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+                } catch (Exception e){
+                    messagesList.add("ERROR!");
                 }
-            } catch (Exception e){
-                messagesList.add("ERROR!");
             }
+            messagesList.add("\n\n\n\n\n\n\n\n"); //to make up for scrolling padding (make sure last message is displayed)
+            String [] messagesArray = messagesList.toArray(new String[0]);
+
+            cursor.close();
+
+
+            final MessageGridAdapter  ad = new MessageGridAdapter(this, messagesArray);
+            messages.setAdapter(ad);
+
+            messages.setSelection(ad.getCount());
+
+
+
+
+            Button upButton = findViewById(R.id.upButton);
+            Button downButton = findViewById(R.id.downButton);
+
+            final int shiftAmount = 5;
+
+            upButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    messages.setSelection(messages.getFirstVisiblePosition()-shiftAmount);
+                }
+            });
+
+
+            downButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    messages.setSelection(messages.getFirstVisiblePosition()+shiftAmount+1);
+                }
+            });
+
         }
-        messagesList.add("\n\n\n\n\n\n\n\n"); //to make up for scrolling padding (make sure last message is displayed)
-        String [] messagesArray = messagesList.toArray(new String[0]);
-
-        cursor.close();
-
-
-        final MessageGridAdapter  ad = new MessageGridAdapter(this, messagesArray);
-        messages.setAdapter(ad);
-
-        messages.setSelection(ad.getCount());
-
-
-
-
-        Button upButton = findViewById(R.id.upButton);
-        Button downButton = findViewById(R.id.downButton);
-
-        final int shiftAmount = 5;
-
-        upButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                messages.setSelection(messages.getFirstVisiblePosition()-shiftAmount);
-            }
-        });
-
-
-        downButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                messages.setSelection(messages.getFirstVisiblePosition()+shiftAmount+1);
-            }
-        });
 
     }
 
