@@ -169,10 +169,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume()
+    {  // After a pause OR at startup
         super.onResume();
-        if(SettingsManager.shouldApplyToMain())
-            this.recreate();
+        //Refresh your stuff here
+        clearDashboard();
+        loadSMSData();
     }
 
     public boolean hasAllPermissions(Context context, String[] permissions){
@@ -239,8 +241,8 @@ public class MainActivity extends AppCompatActivity {
             case 1: {
                 // permission granted
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    loadSMSData();
 //                    deleteAddress("6505551355");
+                    clearDashboard();
                     loadSMSData();
                     createNotificationChannel();
 

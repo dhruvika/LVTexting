@@ -1,12 +1,14 @@
 package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,6 +47,22 @@ public class Conversation extends AppCompatActivity {
                     new String[]{Manifest.permission.SEND_SMS},
                     1);
         } else { //Permission already given
+
+            // Mark all unread messages from this conversation as read
+            String phoneNumber = parseNumber();
+            Uri uri = Uri.parse("content://sms/");
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                while (cursor.moveToNext()) {
+                    if (sameNumber(cursor, phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
+                        String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
+                        ContentValues values = new ContentValues();
+                        values.put("read", true);
+                        getContentResolver().update(Uri.parse("content://sms/"), values, "_id=" + SmsMessageId, null);
+                    }
+                }
+            }
+            catch (Exception e) {}
 
             sendSms();
             setGrid();
@@ -102,18 +120,19 @@ public class Conversation extends AppCompatActivity {
 
                     // Mark all unread messages from this conversation as read
                     String phoneNumber = parseNumber();
-                    Uri uri = Uri.parse("content://sms/inbox");
+                    Uri uri = Uri.parse("content://sms/");
                     Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-                    try{
+                    try {
                         while (cursor.moveToNext()) {
-                            if (sameNumber(cursor,phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
+                            if (sameNumber(cursor, phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
                                 String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
                                 ContentValues values = new ContentValues();
                                 values.put("read", true);
-                                getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + SmsMessageId, null);
+                                getContentResolver().update(Uri.parse("content://sms/"), values, "_id=" + SmsMessageId, null);
                             }
                         }
-                    }catch(Exception e) {}
+                    }
+                    catch (Exception e) {}
 
                     sendSms();
                     setGrid();
