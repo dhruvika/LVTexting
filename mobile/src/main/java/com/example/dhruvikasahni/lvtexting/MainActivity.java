@@ -91,47 +91,67 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     public void run() {
                         if (! t1.isSpeaking()) {
-                            readAloud.setBackgroundResource(R.drawable.stop);
                             TextMessageFetcher messageFetcher = new TextMessageFetcher(MainActivity.this);
-                            if (messageFetcher.fetchReadConversations().isEmpty() && messageFetcher.fetchUnreadConversations().isEmpty()) {
+                            ArrayList<ArrayList<String>> readConversations = messageFetcher.fetchReadConversations();
+                            ArrayList<ArrayList<String>> unreadConversations = messageFetcher.fetchUnreadConversations();
+                            String speak = "";
+                            readAloud.setBackgroundResource(R.drawable.stop);
+
+                            if (readConversations.isEmpty() && unreadConversations.isEmpty()) {
                                 t1.speak("No new messages", TextToSpeech.QUEUE_FLUSH, null);
                                 return;
                             }
-                            for (ArrayList<String> conversationInfo : messageFetcher.fetchUnreadConversations()) {
-                                messageList.add(conversationInfo);
-                            }
-                            while (messageList.size() != 0 && !restart) {
-                                currentMessage = messageList.remove(0);
-                                String speak = "";
-                                String contactName = messageFetcher.getContactName(currentMessage.get(1));
-                                if(contactName != null){
-                                    speak += contactName;
+                            if (unreadConversations.isEmpty()) {
+                                speak += "No unread. ";
+                            } else {
+                                speak += "Unread from: ";
+                                for (ArrayList<String> conversationInfo : unreadConversations) {
+                                    messageList.add(conversationInfo);
                                 }
-                                else{
-                                    for (int i = 0; i < currentMessage.get(1).length(); i ++) {
+                            }
+                            if (!readConversations.isEmpty()) {
+                                for (ArrayList<String> conversationInfo : readConversations) {
+                                    messageList.add(conversationInfo);
+                                }
+                            }
+                            Boolean readingUnread = true;
+                            int ii = 0;
+                            while (ii < messageList.size() && !restart) {
+                                currentMessage = messageList.get(ii);
+                                if (readConversations.contains(currentMessage) && readingUnread) {
+                                    speak += "Red from: ";
+                                    readingUnread = false;
+                                }
+                                String contactName = messageFetcher.getContactName(currentMessage.get(1));
+                                if (contactName != null) {
+                                    speak += contactName;
+                                } else {
+                                    for (int i = 0; i < currentMessage.get(1).length(); i++) {
                                         speak += currentMessage.get(1).charAt(i);
                                         speak += ",";
                                     }
                                 }
                                 SimpleDateFormat inputFormat = new SimpleDateFormat("hh:mm aaa dd MMM");
-                                SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d yyyy, HH:mm aaa");
+                                SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d, HH:mm aaa");
                                 try {
                                     Date parsed = inputFormat.parse(currentMessage.get(2));
                                     speak += outputFormat.format(parsed);
 
                                 } catch (Exception e) {
-
                                 }
+                                ii += 1;
                                 t1.speak(speak, TextToSpeech.QUEUE_ADD, null);
                                 while (t1.isSpeaking()) {}
+                                speak = "";
                             }
                             restart = false;
                             messageList.clear();
                             readAloud.setBackgroundResource(R.drawable.play);
                         } else {
                             restart = true;
-                            t1.stop();
                             t1.speak("", TextToSpeech.QUEUE_FLUSH, null);
+                            t1.stop();
+
                         }
                     }
                 }).start();
