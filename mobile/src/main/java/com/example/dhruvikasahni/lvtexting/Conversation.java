@@ -183,9 +183,9 @@ public class Conversation extends AppCompatActivity {
 //            messages.setSelection((int)(ad.getCount()/2+0.5));
 //        }
         messages.setSelection(ad.getCount());
-        tv.setText(Integer.toString(ad.getCount())+' '+messages.getCount()+' '+messages.getItemAtPosition(messages.getVerticalScrollbarPosition()));
+        tv.setText(Integer.toString(ad.getCount())+' '+messages.getCount()+' '+messages.getItemAtPosition(messages.getVerticalScrollbarPosition())+' '+messages.getBottom()+' '+messages.getFirstVisiblePosition());
 
-        final int currentLine = ad.getCount();
+
 
         Button upButton = findViewById(R.id.upButton);
         Button downButton = findViewById(R.id.downButton);
@@ -193,18 +193,41 @@ public class Conversation extends AppCompatActivity {
         upButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                messages.setSelection(ad.getCount()/2);
-
+                messages.setSelection(messages.getFirstVisiblePosition()-5);
             }
         });
+
 
         downButton.setOnClickListener(new View.OnClickListener(){
+            int currentLine = messages.getFirstVisiblePosition();//ad.getCount();
             @Override
             public void onClick(View v){
-                messages.setSelection(ad.getCount()+10);
-
+                messages.setSelection(messages.getFirstVisiblePosition()+5);
             }
         });
+
+//        upButton.setOnClickListener(new View.OnClickListener(){
+//            int currentLine = ad.getCount();
+//            @Override
+//            public void onClick(View v){
+////                messages.setSelection(ad.getCount()/2);
+//                messages.setSelection(currentLine-5);
+//                currentLine = currentLine -5;
+//
+//            }
+//        });
+//
+//
+//        downButton.setOnClickListener(new View.OnClickListener(){
+//            int currentLine = messages.getFirstVisiblePosition();//ad.getCount();
+//            @Override
+//            public void onClick(View v){
+////                messages.setSelection(ad.getCount()+10);
+//                messages.setSelection(currentLine+10);
+//                currentLine = currentLine+10;
+//
+//            }
+//        });
 
     }
 
