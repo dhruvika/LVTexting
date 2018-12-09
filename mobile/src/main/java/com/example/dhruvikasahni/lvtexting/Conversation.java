@@ -215,31 +215,34 @@ public class Conversation extends AppCompatActivity {
 
                 String smsNumber = parseNumber();
                 EditText smsEditText = (EditText) findViewById(R.id.smsInput);
-                String sms = smsEditText.getText().toString();
-                String scAddress = null;
-                PendingIntent sentIntent = null, deliveryIntent = null;
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage
-                        (smsNumber, scAddress, sms,
-                                sentIntent, deliveryIntent);
+                if (!smsEditText.getText().toString().equals("")){
+                    String sms = smsEditText.getText().toString();
+                    String scAddress = null;
+                    PendingIntent sentIntent = null, deliveryIntent = null;
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage
+                            (smsNumber, scAddress, sms,
+                                    sentIntent, deliveryIntent);
 
-                // Put sent SMS in db : Code added by dhruvika - feel free to change!
-                ContentValues values = new ContentValues();
-                values.put("address", smsNumber);
-                values.put("body", sms);
-                values.put("read", 1);
+                    // Put sent SMS in db : Code added by dhruvika - feel free to change!
+                    ContentValues values = new ContentValues();
+                    values.put("address", smsNumber);
+                    values.put("body", sms);
+                    values.put("read", 1);
 
-                // Get current date time
-                Date date = new Date();
-                String strDateFormat = "hh:mm aaa dd MMM";
-                DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-                String formattedDate = dateFormat. format(date);
+                    // Get current date time
+                    Date date = new Date();
+                    String strDateFormat = "hh:mm aaa dd MMM";
+                    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+                    String formattedDate = dateFormat. format(date);
 
-                values.put("date", formattedDate);
-                getContentResolver().insert(Uri.parse("content://sms/sent"), values);
+                    values.put("date", formattedDate);
+                    getContentResolver().insert(Uri.parse("content://sms/sent"), values);
 
-                setGrid(); //TODO: display messages (including the new one!)
-                smsEditText.setText("");
+                    setGrid(); //TODO: display messages (including the new one!)
+                    smsEditText.setText("");
+
+                }
 
             }
         });
