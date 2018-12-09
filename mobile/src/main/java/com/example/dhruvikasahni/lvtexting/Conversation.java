@@ -62,49 +62,11 @@ public class Conversation extends AppCompatActivity {
             this.recreate();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (permissions[0].equalsIgnoreCase
-                        (Manifest.permission.SEND_SMS)
-                        && grantResults[0] ==
-                        PackageManager.PERMISSION_GRANTED) {
-
-                    // Mark all unread messages from this conversation as read
-                    Bundle bundle = getIntent().getExtras();
-                    String phoneNumber = bundle.getString("phoneNumber");
-                    Uri uri = Uri.parse("content://sms/inbox");
-                    Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-                    try{
-                        while (cursor.moveToNext()) {
-                            String addressSeen = cursor.getString(cursor.getColumnIndex("address"));
-                            if (addressSeen.equals(phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
-                                String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
-                                ContentValues values = new ContentValues();
-                                values.put("read", true);
-                                getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + SmsMessageId, null);
-                            }
-                        }
-                    }catch(Exception e) {}
-
-                    sendSms();
-//                    printMessage();
-                    setGrid();
-                } else {
-                    // Permission denied.
-                }
-            }
-        }
-
+    public boolean sameNumber(Cursor cursor, String no){
+        return cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1));
     }
 
-//    public void discreteScroll(MessageGridAdapter adapter){
-//
-//
-//    }
-
-    public String parseNumber(){ //@Yasmin, here is the helper fxn to obtain the number 
+    public String parseNumber(){ //@Yasmin, here is the helper fxn to obtain the number
         Bundle bundle = getIntent().getExtras();
         String noStr = bundle.getString("phoneNumber");
         String no = "";
@@ -120,6 +82,42 @@ public class Conversation extends AppCompatActivity {
 
         return no;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (permissions[0].equalsIgnoreCase
+                        (Manifest.permission.SEND_SMS)
+                        && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+
+                    // Mark all unread messages from this conversation as read
+                    String phoneNumber = parseNumber();
+                    Uri uri = Uri.parse("content://sms/inbox");
+                    Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                    try{
+                        while (cursor.moveToNext()) {
+                            if (sameNumber(cursor,phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
+                                String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
+                                ContentValues values = new ContentValues();
+                                values.put("read", true);
+                                getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + SmsMessageId, null);
+                            }
+                        }
+                    }catch(Exception e) {}
+
+                    sendSms();
+                    setGrid();
+                } else {
+                    // Permission denied.
+                }
+            }
+        }
+
+    }
+
+
 
     public void setGrid(){
 
@@ -172,62 +170,30 @@ public class Conversation extends AppCompatActivity {
         final MessageGridAdapter  ad = new MessageGridAdapter(this, messagesArray);
         messages.setAdapter(ad);
 
-//        messages.smoothScrollToPosition(); // shifted things slightly down
-//        messages.smoothScrollByOffset(150);// doesnt do anything
-//        messages.scrollTo(0,1000);//upon click, moves to top; but does scroll (all below y val goes white
-//        messages.setTranscriptMode(1);
-//        int cellCount = ad.getCount();
-//        if (cellCount%2==0){
-//            messages.setSelection(ad.getCount()/2);
-//        } else{
-//            messages.setSelection((int)(ad.getCount()/2+0.5));
-//        }
         messages.setSelection(ad.getCount());
-        tv.setText(Integer.toString(ad.getCount())+' '+messages.getCount()+' '+messages.getItemAtPosition(messages.getVerticalScrollbarPosition())+' '+messages.getBottom()+' '+messages.getFirstVisiblePosition());
+
 
 
 
         Button upButton = findViewById(R.id.upButton);
         Button downButton = findViewById(R.id.downButton);
 
+        final int shiftAmount = 5;
+
         upButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                messages.setSelection(messages.getFirstVisiblePosition()-5);
+                messages.setSelection(messages.getFirstVisiblePosition()-shiftAmount);
             }
         });
 
 
         downButton.setOnClickListener(new View.OnClickListener(){
-            int currentLine = messages.getFirstVisiblePosition();//ad.getCount();
             @Override
             public void onClick(View v){
-                messages.setSelection(messages.getFirstVisiblePosition()+5);
+                messages.setSelection(messages.getFirstVisiblePosition()+shiftAmount+1);
             }
         });
-
-//        upButton.setOnClickListener(new View.OnClickListener(){
-//            int currentLine = ad.getCount();
-//            @Override
-//            public void onClick(View v){
-////                messages.setSelection(ad.getCount()/2);
-//                messages.setSelection(currentLine-5);
-//                currentLine = currentLine -5;
-//
-//            }
-//        });
-//
-//
-//        downButton.setOnClickListener(new View.OnClickListener(){
-//            int currentLine = messages.getFirstVisiblePosition();//ad.getCount();
-//            @Override
-//            public void onClick(View v){
-////                messages.setSelection(ad.getCount()+10);
-//                messages.setSelection(currentLine+10);
-//                currentLine = currentLine+10;
-//
-//            }
-//        });
 
     }
 
@@ -264,7 +230,7 @@ public class Conversation extends AppCompatActivity {
                     values.put("date", formattedDate);
                     getContentResolver().insert(Uri.parse("content://sms/sent"), values);
 
-                    setGrid(); //TODO: display messages (including the new one!)
+                    setGrid(); //display messages (including the new one!) [make sure SMS is set to default text app]
                     smsEditText.setText("");
 
                 }

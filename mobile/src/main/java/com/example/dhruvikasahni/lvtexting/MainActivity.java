@@ -157,6 +157,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Abhiti's added code for new message composition (feel free to change)
+        Button addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Conversation.class);
+                intent.putExtra("phoneNumber","");
+                startActivity(intent);
+            }});
     }
 
     @Override
