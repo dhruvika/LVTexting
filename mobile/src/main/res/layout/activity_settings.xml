@@ -102,6 +102,142 @@
                     android:tint="@color/colorPrimaryDark" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/char_space_d"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/char_space_down_arrow"
+                    android:onClick="onChangePref"
+                    android:src="@android:drawable/arrow_down_float"
+                    android:tint="@color/colorPrimaryDark" />
+                <TextView
+                    android:textSize="?attr/font_size"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/char_space"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="@string/char_space"/>
+                <ImageButton
+                    android:id="@+id/char_space_i"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/char_space_up_arrow"
+                    android:onClick="onChangePref"
+                    android:src="@android:drawable/arrow_up_float"
+                    android:tint="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/screen_padding_d"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/screen_padding_down_arrow"
+                    android:onClick="onChangePref"
+                    android:src="@android:drawable/arrow_down_float"
+                    android:tint="@color/colorPrimaryDark" />
+                <TextView
+                    android:textSize="?attr/font_size"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/screen_padding"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="@string/screen_padding"/>
+                <ImageButton
+                    android:id="@+id/screen_padding_i"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/screen_padding_up_arrow"
+                    android:onClick="onChangePref"
+                    android:src="@android:drawable/arrow_up_float"
+                    android:tint="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/brightness_d"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/brightness_down_arrow"
+                    android:onClick="onChangePref"
+                    android:src="@android:drawable/arrow_down_float"
+                    android:tint="@color/colorPrimaryDark" />
+                <TextView
+                    android:textSize="?attr/font_size"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/brightness"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="@string/brightness"/>
+                <ImageButton
+                    android:id="@+id/brightness_i"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/brightness_up_arrow"
+                    android:onClick="onChangePref"
+                    android:src="@android:drawable/arrow_up_float"
+                    android:tint="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/speaker_speed_d"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/speaker_speed_down_arrow"
+                    android:onClick="onChangePref"
+                    android:src="@android:drawable/arrow_down_float"
+                    android:tint="@color/colorPrimaryDark" />
+                <TextView
+                    android:textSize="?attr/font_size"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/speaker_speed"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="@string/speaker_speed"/>
+                <ImageButton
+                    android:id="@+id/speaker_speed_i"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/speaker_speed_up_arrow"
+                    android:onClick="onChangePref"
+                    android:src="@android:drawable/arrow_up_float"
+                    android:tint="@color/colorPrimaryDark" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
