@@ -45,11 +45,10 @@ public class Conversation extends AppCompatActivity {
                     new String[]{Manifest.permission.SEND_SMS},
                     1);
         } else { //Permission already given
-//            super.onCreate(savedInstanceState);
-//            setContentView(R.layout.activity_conversation);
+
             sendSms();
-//            printMessage();
             setGrid();
+
 
         }
 
@@ -71,6 +70,24 @@ public class Conversation extends AppCompatActivity {
                         (Manifest.permission.SEND_SMS)
                         && grantResults[0] ==
                         PackageManager.PERMISSION_GRANTED) {
+
+                    // Mark all unread messages from this conversation as read
+                    Bundle bundle = getIntent().getExtras();
+                    String phoneNumber = bundle.getString("phoneNumber");
+                    Uri uri = Uri.parse("content://sms/inbox");
+                    Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                    try{
+                        while (cursor.moveToNext()) {
+                            String addressSeen = cursor.getString(cursor.getColumnIndex("address"));
+                            if (addressSeen.equals(phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
+                                String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
+                                ContentValues values = new ContentValues();
+                                values.put("read", true);
+                                getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + SmsMessageId, null);
+                            }
+                        }
+                    }catch(Exception e) {}
+
                     sendSms();
 //                    printMessage();
                     setGrid();
@@ -81,6 +98,11 @@ public class Conversation extends AppCompatActivity {
         }
 
     }
+
+//    public void discreteScroll(MessageGridAdapter adapter){
+//
+//
+//    }
 
     public String parseNumber(){ //@Yasmin, here is the helper fxn to obtain the number 
         Bundle bundle = getIntent().getExtras();
@@ -101,47 +123,24 @@ public class Conversation extends AppCompatActivity {
 
     public void setGrid(){
 
-        GridView messages = findViewById(R.id.messages);
+        final GridView messages = findViewById(R.id.messages);
 
 
         List<String> messagesList = new ArrayList<String>();
         int previous = 1; //0:other, 1:user
 
-        //works for all american numbers, AND justifies users
+        //works for all American numbers, AND justifies users
 
         Bundle bundle = getIntent().getExtras();
 
-//        TextView msg = findViewById(R.id.textView);
         final Uri SMS_INBOX = Uri.parse("content://sms");
         Cursor cursor = getContentResolver().query(SMS_INBOX, null, null,null, "date asc");
         cursor.moveToFirst();
+        TextView tv = findViewById(R.id.textView2);
         while(cursor.moveToNext()) {
-//            String noStr = bundle.getString("phoneNumber");
-//            String no = "";
-//
-////            String ct ="";
-//
-//            for (int c=0; c<noStr.length();c++){
-//                if (Character.isDigit(noStr.charAt(c))){
-//                    no = no + noStr.charAt(c);
-//                }
-//
-//            }
-////                ct = ct+ noStr+"   "+Integer.toString(noStr.length())+'\n';
-////                ct = ct + no+"   "+Integer.toString(no.length())+'\n';
-//                if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
-//                    no = no.substring(1);
-//                }
-//
-////            ct = ct + no+"   "+Integer.toString(no.length());
-////            TextView textView2 = findViewById(R.id.textView2);
-////            textView2.setText(ct);
             String no = parseNumber();
 
-
-
             try{
-//                allnos = allnos + no + '\n';
                 if (cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1))){
                     if(cursor.getString(cursor.getColumnIndex("type")).equals("2")){ //user-sent message
                         if(previous==1){//previous message also sent by me
@@ -157,37 +156,66 @@ public class Conversation extends AppCompatActivity {
                         }
                         previous = 0;
                     }
-//                    messagesList.add(Boolean.toString(cursor.getString(cursor.getColumnIndex("type")).equals("1")));
                     messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+                    tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
                 }
             } catch (Exception e){
                 messagesList.add("ERROR!");
             }
-//            textView2.setText(allnos);
         }
+        messagesList.add("\n\n\n\n\n\n\n\n"); //to make up for scrolling padding (make sure last message is displayed)
         String [] messagesArray = messagesList.toArray(new String[0]);
-//        msg.setText(msgContent);
 
         cursor.close();
 
-        messages.setAdapter(new MessageGridAdapter(this, messagesArray));
+
+        final MessageGridAdapter  ad = new MessageGridAdapter(this, messagesArray);
+        messages.setAdapter(ad);
+
+//        messages.smoothScrollToPosition(); // shifted things slightly down
+//        messages.smoothScrollByOffset(150);// doesnt do anything
+//        messages.scrollTo(0,1000);//upon click, moves to top; but does scroll (all below y val goes white
+//        messages.setTranscriptMode(1);
+//        int cellCount = ad.getCount();
+//        if (cellCount%2==0){
+//            messages.setSelection(ad.getCount()/2);
+//        } else{
+//            messages.setSelection((int)(ad.getCount()/2+0.5));
+//        }
+        messages.setSelection(ad.getCount());
+        tv.setText(Integer.toString(ad.getCount())+' '+messages.getCount()+' '+messages.getItemAtPosition(messages.getVerticalScrollbarPosition()));
+
+        final int currentLine = ad.getCount();
+
+        Button upButton = findViewById(R.id.upButton);
+        Button downButton = findViewById(R.id.downButton);
+
+        upButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                messages.setSelection(ad.getCount()/2);
+
+            }
+        });
+
+        downButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                messages.setSelection(ad.getCount()+10);
+
+            }
+        });
 
     }
 
+
     public void sendSms(){
-        Button sendButton = (Button) findViewById(R.id.sendButton);
+        Button sendButton = findViewById(R.id.sendButton);
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Bundle bundle = getIntent().getExtras();
-                String noStr = bundle.getString("phoneNumber");
-                String no = "";
-                for (int c=0; c<noStr.length();c++){
-                    if (noStr.charAt(c)!='+'&&noStr.charAt(c)!='-'&&noStr.charAt(c)!=' '&&noStr.charAt(c)!='('&&noStr.charAt(c)!=')'){
-                        no = no + noStr.charAt(c);
-                    }
-                }
-                String smsNumber = no;
+
+                String smsNumber = parseNumber();
                 EditText smsEditText = (EditText) findViewById(R.id.smsInput);
                 String sms = smsEditText.getText().toString();
                 String scAddress = null;
@@ -211,6 +239,9 @@ public class Conversation extends AppCompatActivity {
 
                 values.put("date", formattedDate);
                 getContentResolver().insert(Uri.parse("content://sms/sent"), values);
+
+                setGrid(); //TODO: display messages (including the new one!)
+                smsEditText.setText("");
 
             }
         });

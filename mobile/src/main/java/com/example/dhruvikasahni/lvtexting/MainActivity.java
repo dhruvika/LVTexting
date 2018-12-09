@@ -2,13 +2,17 @@ package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -149,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     intent.putExtra("phoneNumber", address);
                     startActivity(intent);
+
                 }
             }
         });
@@ -170,38 +175,54 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void deleteAddress(String addressName){
-        String phoneNumber = addressName;
-        TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
-
-        if(messageFetcher.getContactNumber2(addressName) != null)
-            phoneNumber = messageFetcher.getContactNumber2(addressName);
-
-        Uri uriSms = Uri.parse("content://sms/inbox");
-        Cursor c = this.getContentResolver().query(
-                uriSms,
-                new String[] { "_id", "thread_id", "address", "person",
-                        "date", "body" }, null, null, null);
-
-
-        if (c != null && c.moveToFirst()) {
-            do {
-//                long id = c.getLong(0);
-                String address = c.getString(2);
-//                String body = c.getString(5);
-
-                if(address.equals(phoneNumber)) {
-//                    this.getContentResolver().delete(
-//                            Uri.parse("content://sms/" + id), "date=?",
-//                            new String[]{c.getString(4)});
-                    int thread_id = c.getInt(1); //get the thread_id
-                    this.getContentResolver().delete(Uri.parse("content://sms/conversations/" + thread_id),null,null);
-                    break;
-                }
-
-            } while (c.moveToNext());
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "message_notifs";
+            String description = "channel for message notifications";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("message_notifs", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
+
+//    public void deleteAddress(String addressName){
+//        String phoneNumber = addressName;
+//        TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
+//
+//        if(messageFetcher.getContactNumber2(addressName) != null)
+//            phoneNumber = messageFetcher.getContactNumber2(addressName);
+//
+//        Uri uriSms = Uri.parse("content://sms/inbox");
+//        Cursor c = this.getContentResolver().query(
+//                uriSms,
+//                new String[] { "_id", "thread_id", "address", "person",
+//                        "date", "body" }, null, null, null);
+//
+//
+//        if (c != null && c.moveToFirst()) {
+//            do {
+////                long id = c.getLong(0);
+//                String address = c.getString(2);
+////                String body = c.getString(5);
+//
+//                if(address.equals(phoneNumber)) {
+////                    this.getContentResolver().delete(
+////                            Uri.parse("content://sms/" + id), "date=?",
+////                            new String[]{c.getString(4)});
+//                    int thread_id = c.getInt(1); //get the thread_id
+//                    this.getContentResolver().delete(Uri.parse("content://sms/conversations/" + thread_id),null,null);
+//                    break;
+//                }
+//
+//            } while (c.moveToNext());
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -212,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
 //                    loadSMSData();
 //                    deleteAddress("6505551355");
                     loadSMSData();
+                    createNotificationChannel();
 
                     // Register a new broadcast receiver
                         BroadcastReceiver smsReceived = new BroadcastReceiver() {
@@ -318,11 +340,14 @@ public class MainActivity extends AppCompatActivity {
                 String address = phoneNumText.getText().toString();
                 Intent intent = new Intent(MainActivity.this, Conversation.class);
                 String phoneNumber = messageFetcher2.getContactNumber2(address);
+
                 if(phoneNumber != null){
                     address = phoneNumber;
                 }
                 intent.putExtra("phoneNumber",address);
+
                 startActivity(intent);
+
             }});
         return row;
     }
