@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        SettingsManager.applySettingsToTheme(this);
+        
         setContentView(R.layout.activity_main);
         String[] permissions = {Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS,
                 Manifest.permission.RECEIVE_SMS};
@@ -72,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                     permissions, 1);
         }
 
-        setFontFromSettings();
 
         t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -159,9 +160,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        setFontFromSettings();
+    protected void onResume() {
+        super.onResume();
+        if(SettingsManager.shouldApplyToMain())
+            this.recreate();
     }
 
     public boolean hasAllPermissions(Context context, String[] permissions){
@@ -348,12 +350,6 @@ public class MainActivity extends AppCompatActivity {
 
             }});
         return row;
-    }
-
-
-
-    public void setFontFromSettings() {
-        SettingsManager.onFontChange(this, (ViewGroup) findViewById(R.id.Dashboard_Container));
     }
 }
 

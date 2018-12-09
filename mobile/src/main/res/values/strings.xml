@@ -8,4 +8,24 @@
     <string name="font_size">Font Size</string>
     <string name="font_size_up_arrow">Font Size Up Arrow</string>
     <string name="font_size_down_arrow">Font Size Down Arrow</string>
+
+    <string name="line_space">Line Spacing</string>
+    <string name="line_space_up_arrow">Line Spacing Up Arrow</string>
+    <string name="line_space_down_arrow">Line Spacing Down Arrow</string>
+
+    <string name="char_space">Character Spacing</string>
+    <string name="char_space_up_arrow">Character Spacing Up Arrow</string>
+    <string name="char_space_down_arrow">Character Spacing Down Arrow</string>
+
+    <string name="screen_padding">Screen Padding</string>
+    <string name="screen_padding_up_arrow">Screen Padding Up Arrow</string>
+    <string name="screen_padding_down_arrow">Screen Padding Down Arrow</string>
+
+    <string name="brightness">Brightness</string>
+    <string name="brightness_up_arrow">Brightness Up Arrow</string>
+    <string name="brightness_down_arrow">Brightness Down Arrow</string>
+
+    <string name="speaker_speed">Speaker Speed</string>
+    <string name="speaker_speed_up_arrow">Speaker Speed Up Arrow</string>
+    <string name="speaker_speed_down_arrow">Speaker Speed Down Arrow</string>
 </resources>

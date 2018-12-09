@@ -15,11 +15,17 @@
         <item name="android:colorButtonNormal">@color/colorBlack</item>
     </style>
 
-    <style name="TextColor">
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+    <style name="FontSize">
     </style>
-    <!-- My bad on this one. I couldn't find a better way to dynamically change font with any
-        level of precision, so I programmatically generated this. Anyway, here's wonderwall. -->
-    <!--<style name="FontStyle10"><item name="android:textSize">10sp</item></style>-->
+
+    <style name="FontSize.S1"><item name="font_size">12sp</item></style>
+    <style name="FontSize.S2"><item name="font_size">14sp</item></style>
+    <style name="FontSize.S3"><item name="font_size">16sp</item></style>
+    <style name="FontSize.S4"><item name="font_size">18sp</item></style>
+    <style name="FontSize.S5"><item name="font_size">20sp</item></style>
+    <style name="FontSize.S6"><item name="font_size">22sp</item></style>
+    <style name="FontSize.S7"><item name="font_size">24sp</item></style>
+    <style name="FontSize.S8"><item name="font_size">26sp</item></style>
+    <style name="FontSize.S9"><item name="font_size">28sp</item></style>
 
 </resources>
