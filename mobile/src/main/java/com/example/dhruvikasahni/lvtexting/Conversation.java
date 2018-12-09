@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Conversation extends AppCompatActivity {
-
+    Button call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +49,18 @@ public class Conversation extends AppCompatActivity {
             sendSms();
             setGrid();
 
-
         }
 
-
+        call = (Button)findViewById(R.id.call);
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = "tel:" + parseNumber();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse(uri));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
