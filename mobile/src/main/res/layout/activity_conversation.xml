@@ -5,6 +5,8 @@
     android:id="@+id/Conversation_Container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="?attr/screen_padding"
+    android:paddingRight="?attr/screen_padding"
     tools:context=".Conversation"
     tools:layout_editor_absoluteY="25dp">
 

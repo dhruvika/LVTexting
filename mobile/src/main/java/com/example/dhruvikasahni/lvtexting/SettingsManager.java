@@ -33,6 +33,7 @@ public class SettingsManager {
     private static final String CHAR_SPACING = "CHAR_SPACING";
     private static final String BRIGHTNESS = "BRIGHTNESS";
     private static final String SPEAKER_SPEED = "SPEAKER_SPEED";
+    private static final String SCREEN_PADDING = "SCREEN_PADDING";
 
     public static void applySettingsToTheme(Context context) {
         /*
@@ -121,6 +122,44 @@ public class SettingsManager {
                 break;
         }
 
+        // Apply screen padding
+        int currentScreenPadding = sharedPref.getInt(SCREEN_PADDING,0);
+        switch (currentScreenPadding) {
+            case 0:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S0, true);
+                break;
+            case 1:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S1, true);
+                break;
+            case 2:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S2, true);
+                break;
+            case 3:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S3, true);
+                break;
+            case 4:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S4, true);
+                break;
+            case 5:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S5, true);
+                break;
+            case 6:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S6, true);
+                break;
+            case 7:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S7, true);
+                break;
+            case 8:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S8, true);
+                break;
+            case 9:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S9, true);
+                break;
+            default:
+                context.getTheme().applyStyle(R.style.ScreenPadding_S0, true);
+                break;
+        }
+
         // Apply brightness
         int currentBrightness = sharedPref.getInt(BRIGHTNESS,100);
         float backLightValue = (float)currentBrightness/100;
@@ -140,22 +179,23 @@ public class SettingsManager {
         Resources.Theme theme = context.getTheme();
         List<TextView> textViews = getViewsFromGroup(viewContainer);
 
-        int[] attributes = new int[] { R.attr.font_size, R.attr.line_spacing, R.attr.char_spacing };
+        int[] attributes = new int[] { R.attr.font_size, R.attr.line_spacing, R.attr.char_spacing, R.attr.screen_padding };
         TypedArray array = theme.obtainStyledAttributes(attributes);
 
         final int fontSize = array.getDimensionPixelSize(0, 20);
         final float lineSpacing = array.getFloat(1, 1.0f);
         final float charSpacing = array.getFloat(2, 1.0f);
+        final int screenPadding = array.getDimensionPixelSize(3, 0);
         array.recycle();
 
         for( int i = 0; i < textViews.size(); i++ ) {
             textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
             textViews.get(i).setLineSpacing(0, lineSpacing);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Log.d("Debug", Float.toString(charSpacing));
                 textViews.get(i).setLetterSpacing(charSpacing);
             }
         }
+        viewContainer.setPadding(screenPadding, 0, screenPadding, 0);
     }
 
     private static List<TextView> getViewsFromGroup(ViewGroup viewGroup) {
@@ -238,14 +278,14 @@ public class SettingsManager {
         Change char spacing by delta
         */
         SharedPreferences sharedPref = getSharedPreferences(context);
-        int MAX_LINE_SPACING = 5;
-        int MIN_LINE_SPACING = 0;
+        int MAX_VAL = 5;
+        int MIN_VAL = 0;
 
-        // Calculate new size
+        // Calculate new value
         int currentVal = sharedPref.getInt(CHAR_SPACING, 0);
         int newVal = currentVal + delta;
-        if (newVal > MAX_LINE_SPACING) { newVal = MAX_LINE_SPACING; }
-        if (newVal < MIN_LINE_SPACING) { newVal = MIN_LINE_SPACING; }
+        if (newVal > MAX_VAL) { newVal = MAX_VAL; }
+        if (newVal < MIN_VAL) { newVal = MIN_VAL; }
 
         // Set preference (Try using commit instead of apply)
         sharedPref.edit().putInt(CHAR_SPACING, newVal).apply();
@@ -256,14 +296,14 @@ public class SettingsManager {
         Change brightness by delta
         */
         SharedPreferences sharedPref = getSharedPreferences(context);
-        int MAX_LINE_SPACING = 100;
-        int MIN_LINE_SPACING = 20;
+        int MAX_VAL = 100;
+        int MIN_VAL = 20;
 
-        // Calculate new size
+        // Calculate new value
         int currentVal = sharedPref.getInt(BRIGHTNESS, 100);
         int newVal = currentVal + (5 * delta);
-        if (newVal > MAX_LINE_SPACING) { newVal = MAX_LINE_SPACING; }
-        if (newVal < MIN_LINE_SPACING) { newVal = MIN_LINE_SPACING; }
+        if (newVal > MAX_VAL) { newVal = MAX_VAL; }
+        if (newVal < MIN_VAL) { newVal = MIN_VAL; }
 
         // Set preference (Try using commit instead of apply)
         sharedPref.edit().putInt(BRIGHTNESS, newVal).apply();
@@ -274,16 +314,36 @@ public class SettingsManager {
         Change speaker speed by delta
         */
         SharedPreferences sharedPref = getSharedPreferences(context);
-        float MAX_LINE_SPACING = 5.0f;
-        float MIN_LINE_SPACING = 0.25f;
+        float MAX_VAL = 5.0f;
+        float MIN_VAL = 0.25f;
 
-        // Calculate new size
+        // Calculate new value
         float currentVal = sharedPref.getFloat(SPEAKER_SPEED, 1.0f);
         float newVal = currentVal + (0.05f * delta);
-        if (newVal > MAX_LINE_SPACING) { newVal = MAX_LINE_SPACING; }
-        if (newVal < MIN_LINE_SPACING) { newVal = MIN_LINE_SPACING; }
+        if (newVal > MAX_VAL) { newVal = MAX_VAL; }
+        if (newVal < MIN_VAL) { newVal = MIN_VAL; }
 
         // Set preference (Try using commit instead of apply)
         sharedPref.edit().putFloat(SPEAKER_SPEED, newVal).apply();
+    }
+
+    public static void changeScreenPadding(Context context, int delta) {
+        /*
+        Change speaker speed by delta
+        */
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        int MAX_VAL = 9;
+        int MIN_VAL = 0;
+
+        // Calculate new value
+        Log.d("Debug", "w");
+        int currentVal = sharedPref.getInt(SCREEN_PADDING, 0);
+        int newVal = currentVal + delta;
+        if (newVal > MAX_VAL) { newVal = MAX_VAL; }
+        if (newVal < MIN_VAL) { newVal = MIN_VAL; }
+
+        // Set preference (Try using commit instead of apply)
+        sharedPref.edit().putInt(SCREEN_PADDING, newVal).apply();
+        Log.d("Debug", "z");
     }
 }

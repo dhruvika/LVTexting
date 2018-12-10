@@ -11,4 +11,8 @@
     <declare-styleable name="CharSpacing">
         <attr name="char_spacing" format="float"/>
     </declare-styleable>
+
+    <declare-styleable name="ScreenPadding">
+        <attr name="screen_padding" format="dimension"/>
+    </declare-styleable>
 </resources>

@@ -39,6 +39,10 @@ public class SettingsActivity extends AppCompatActivity {
                 SettingsManager.changeSpeakerSpeed(this, 1); break;
             case R.id.speaker_speed_d:
                 SettingsManager.changeSpeakerSpeed(this, -1); break;
+            case R.id.screen_padding_i:
+                SettingsManager.changeScreenPadding(this, 1); break;
+            case R.id.screen_padding_d:
+                SettingsManager.changeScreenPadding(this, -1); break;
         }
         SettingsManager.markChange();
         SettingsManager.applySettingsToTheme(this);

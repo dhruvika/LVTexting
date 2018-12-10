@@ -42,4 +42,16 @@
     <style name="CharSpacing.S4"><item name="char_spacing">0.4</item></style>
     <style name="CharSpacing.S5"><item name="char_spacing">0.5</item></style>
 
+    <style name="ScreenPadding"> </style>
+    <style name="ScreenPadding.S0"><item name="screen_padding">0dp</item></style>
+    <style name="ScreenPadding.S1"><item name="screen_padding">4dp</item></style>
+    <style name="ScreenPadding.S2"><item name="screen_padding">8dp</item></style>
+    <style name="ScreenPadding.S3"><item name="screen_padding">12dp</item></style>
+    <style name="ScreenPadding.S4"><item name="screen_padding">16dp</item></style>
+    <style name="ScreenPadding.S5"><item name="screen_padding">20dp</item></style>
+    <style name="ScreenPadding.S6"><item name="screen_padding">24dp</item></style>
+    <style name="ScreenPadding.S7"><item name="screen_padding">28dp</item></style>
+    <style name="ScreenPadding.S8"><item name="screen_padding">32dp</item></style>
+    <style name="ScreenPadding.S9"><item name="screen_padding">36dp</item></style>
+
 </resources>
