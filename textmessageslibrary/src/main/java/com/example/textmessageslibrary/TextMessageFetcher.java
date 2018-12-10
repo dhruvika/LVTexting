@@ -57,7 +57,7 @@ public class TextMessageFetcher {
     public ArrayList<ArrayList<String>> fetchUnreadConversations(){
         ArrayList<ArrayList<String>> allConversations = new ArrayList<>();
         Set<String> addresses = new HashSet<>();
-        Uri uri = Uri.parse("content://sms/");
+        Uri uri = Uri.parse("content://sms/inbox");
         Cursor cursor = this.activity.getContentResolver().query(uri, new String[]{"_id", "address", "date", "read", "body"},
                 "read=0", null, "date DESC");
 
@@ -95,7 +95,7 @@ public class TextMessageFetcher {
 
         ArrayList<ArrayList<String>> allConversations = new ArrayList<>();
         Set<String> addresses = new HashSet<>();
-        Uri uri = Uri.parse("content://sms/");
+        Uri uri = Uri.parse("content://sms/inbox");
         Cursor cursor = this.activity.getContentResolver().query(uri, new String[]{"_id", "address", "date", "read", "body"},
                 "read=1", null, "date DESC");
 
