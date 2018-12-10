@@ -1,14 +1,12 @@
 package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Conversation extends AppCompatActivity {
-    Button call;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,37 +46,13 @@ public class Conversation extends AppCompatActivity {
                     1);
         } else { //Permission already given
 
-            // Mark all unread messages from this conversation as read
-            String phoneNumber = parseNumber();
-            Uri uri = Uri.parse("content://sms/");
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            try {
-                while (cursor.moveToNext()) {
-                    if (sameNumber(cursor, phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
-                        String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
-                        ContentValues values = new ContentValues();
-                        values.put("read", true);
-                        getContentResolver().update(Uri.parse("content://sms/"), values, "_id=" + SmsMessageId, null);
-                    }
-                }
-            }
-            catch (Exception e) {}
-
             sendSms();
             setGrid();
 
+
         }
 
-        call = (Button)findViewById(R.id.call);
-        call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String uri = "tel:" + parseNumber();
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse(uri));
-                startActivity(intent);
-            }
-        });
+
     }
 
     @Override
@@ -120,19 +94,18 @@ public class Conversation extends AppCompatActivity {
 
                     // Mark all unread messages from this conversation as read
                     String phoneNumber = parseNumber();
-                    Uri uri = Uri.parse("content://sms/");
+                    Uri uri = Uri.parse("content://sms/inbox");
                     Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-                    try {
+                    try{
                         while (cursor.moveToNext()) {
-                            if (sameNumber(cursor, phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
+                            if (sameNumber(cursor,phoneNumber) && (cursor.getInt(cursor.getColumnIndex("read")) == 0)) {
                                 String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
                                 ContentValues values = new ContentValues();
                                 values.put("read", true);
-                                getContentResolver().update(Uri.parse("content://sms/"), values, "_id=" + SmsMessageId, null);
+                                getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + SmsMessageId, null);
                             }
                         }
-                    }
-                    catch (Exception e) {}
+                    }catch(Exception e) {}
 
                     sendSms();
                     setGrid();
@@ -183,7 +156,7 @@ public class Conversation extends AppCompatActivity {
                             previous = 0;
                         }
                         messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
-                        tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+//                        tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
                     }
                 } catch (Exception e){
                     messagesList.add("ERROR!");
