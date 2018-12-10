@@ -86,6 +86,7 @@
         android:textSize="?attr/font_size"
         android:lineSpacingMultiplier="?attr/line_spacing"
         android:letterSpacing="?attr/char_spacing"
+        style="?android:attr/borderlessButtonStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
