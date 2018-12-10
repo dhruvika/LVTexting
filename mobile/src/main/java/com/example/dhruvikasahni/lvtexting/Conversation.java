@@ -183,7 +183,7 @@ public class Conversation extends AppCompatActivity {
                             previous = 0;
                         }
                         messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
-                        tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+//                        tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
                     }
                 } catch (Exception e){
                     messagesList.add("ERROR!");
