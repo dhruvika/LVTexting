@@ -35,6 +35,10 @@ public class SettingsActivity extends AppCompatActivity {
                 SettingsManager.changeBrightness(this, 1); break;
             case R.id.brightness_d:
                 SettingsManager.changeBrightness(this, -1); break;
+            case R.id.speaker_speed_i:
+                SettingsManager.changeSpeakerSpeed(this, 1); break;
+            case R.id.speaker_speed_d:
+                SettingsManager.changeSpeakerSpeed(this, -1); break;
         }
         SettingsManager.markChange();
         SettingsManager.applySettingsToTheme(this);

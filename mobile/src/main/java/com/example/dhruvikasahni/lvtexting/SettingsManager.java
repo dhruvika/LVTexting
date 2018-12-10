@@ -32,6 +32,7 @@ public class SettingsManager {
     private static final String LINE_SPACING = "LINE_SPACING";
     private static final String CHAR_SPACING = "CHAR_SPACING";
     private static final String BRIGHTNESS = "BRIGHTNESS";
+    private static final String SPEAKER_SPEED = "SPEAKER_SPEED";
 
     public static void applySettingsToTheme(Context context) {
         /*
@@ -126,6 +127,10 @@ public class SettingsManager {
         WindowManager.LayoutParams layoutParams = ((Activity)context).getWindow().getAttributes(); // Get Params
         layoutParams.screenBrightness = backLightValue; // Set Value
         ((Activity)context).getWindow().setAttributes(layoutParams); // Set params
+
+        // Apply speaker speed
+        float currentSpeakerSpeed = sharedPref.getFloat(SPEAKER_SPEED, 1.0f);
+        // TODO apply currentSpeakerSpeed to text to speech playback
     }
 
     public static void applyThemeToView(Context context, ViewGroup viewContainer) {
@@ -212,7 +217,7 @@ public class SettingsManager {
 
     public static void changeLineSpacing(Context context, int delta) {
         /*
-        Change font size by delta
+        Change line spacing by delta
         */
         SharedPreferences sharedPref = getSharedPreferences(context);
         int MAX_LINE_SPACING = 5;
@@ -230,7 +235,7 @@ public class SettingsManager {
 
     public static void changeCharSpacing(Context context, int delta) {
         /*
-        Change font size by delta
+        Change char spacing by delta
         */
         SharedPreferences sharedPref = getSharedPreferences(context);
         int MAX_LINE_SPACING = 5;
@@ -248,7 +253,7 @@ public class SettingsManager {
 
     public static void changeBrightness(Context context, int delta) {
         /*
-        Change font size by delta
+        Change brightness by delta
         */
         SharedPreferences sharedPref = getSharedPreferences(context);
         int MAX_LINE_SPACING = 100;
@@ -262,5 +267,23 @@ public class SettingsManager {
 
         // Set preference (Try using commit instead of apply)
         sharedPref.edit().putInt(BRIGHTNESS, newVal).apply();
+    }
+
+    public static void changeSpeakerSpeed(Context context, int delta) {
+        /*
+        Change speaker speed by delta
+        */
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        float MAX_LINE_SPACING = 5.0f;
+        float MIN_LINE_SPACING = 0.25f;
+
+        // Calculate new size
+        float currentVal = sharedPref.getFloat(SPEAKER_SPEED, 1.0f);
+        float newVal = currentVal + (0.05f * delta);
+        if (newVal > MAX_LINE_SPACING) { newVal = MAX_LINE_SPACING; }
+        if (newVal < MIN_LINE_SPACING) { newVal = MIN_LINE_SPACING; }
+
+        // Set preference (Try using commit instead of apply)
+        sharedPref.edit().putFloat(SPEAKER_SPEED, newVal).apply();
     }
 }
