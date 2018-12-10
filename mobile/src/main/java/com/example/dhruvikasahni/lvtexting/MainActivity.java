@@ -81,12 +81,13 @@ public class MainActivity extends AppCompatActivity {
                     permissions, 1);
         }
 
-
+        final float speechRate = SettingsManager.getSpeakerSpeed();
         t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
                     t1.setLanguage(Locale.US);
+                    t1.setSpeechRate(speechRate);
                 }
             }
         });

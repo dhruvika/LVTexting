@@ -204,9 +204,6 @@ public class Conversation extends AppCompatActivity {
 
             messages.setSelection(ad.getCount());
 
-
-
-
             Button upButton = findViewById(R.id.upButton);
             Button downButton = findViewById(R.id.downButton);
 
@@ -232,12 +229,13 @@ public class Conversation extends AppCompatActivity {
                 }
             });
 
-
+            final float speechRate = SettingsManager.getSpeakerSpeed();
             t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int status) {
                     if(status != TextToSpeech.ERROR) {
                         t1.setLanguage(Locale.US);
+                        t1.setSpeechRate(speechRate);
                     }
                 }
             });
@@ -333,11 +331,4 @@ public class Conversation extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
-
-
 }
