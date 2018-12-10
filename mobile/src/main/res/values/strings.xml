@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SMS</string>
     <string name="settings_button">Settings</string>
+    <string name="search_button">Search</string>
 
     <string name="sample_text">Sample Text</string>
     <string name="sample_text_desc">This is sample text\nThis is a new line</string>

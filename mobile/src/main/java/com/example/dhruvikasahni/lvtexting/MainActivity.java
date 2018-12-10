@@ -343,6 +343,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchSearchActivity(View v) {
+        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+        startActivity(intent);
+    }
+
     public void clearDashboard(){
         TableLayout dashboard = MainActivity.this.findViewById(R.id.Dashboard);
         dashboard.removeAllViews();
@@ -392,6 +397,9 @@ public class MainActivity extends AppCompatActivity {
         row.addView(readText);
         row.addView(addressText);
         row.addView(dateText);
+
+        // Add formatting to row
+        SettingsManager.applyThemeToView(this, row);
 
         // set row id
         addressText.setId(conversationInfo.get(1).hashCode());

@@ -77,6 +77,7 @@ public class TextMessageFetcher {
                     conversation.add("unread");
                     conversation.add(address);
                     conversation.add(date);
+                    conversation.add(body);
                     allConversations.add(conversation);
                 }
                 cursor.moveToNext();

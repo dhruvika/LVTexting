@@ -208,6 +208,11 @@ public class Conversation extends AppCompatActivity {
 
             final int shiftAmount = 5;
 
+
+            // Add formatting to row
+            SettingsManager.applyThemeToView(this, messages);
+
+            // Add onClick listeners
             upButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
