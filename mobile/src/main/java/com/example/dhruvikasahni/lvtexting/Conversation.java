@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Telephony;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,9 +30,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Conversation extends AppCompatActivity {
     Button call;
+    TextToSpeech t1;
+    Button readAloud;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,6 +229,62 @@ public class Conversation extends AppCompatActivity {
                 @Override
                 public void onClick(View v){
                     messages.setSelection(messages.getFirstVisiblePosition()+shiftAmount+1);
+                }
+            });
+
+
+            t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if(status != TextToSpeech.ERROR) {
+                        t1.setLanguage(Locale.US);
+                    }
+                }
+            });
+
+            readAloud = (Button)findViewById(R.id.readAloud);
+            readAloud.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new Thread(new Runnable() {
+                        public void run() {
+                            if (!t1.isSpeaking()) {
+                                readAloud.setBackgroundResource(R.drawable.stop);
+                                String speak = "";
+                                int previous = messages.getFirstVisiblePosition() % 2;
+                                if (previous == 0) {
+                                    speak += "They said: ";
+                                } else {
+                                    speak += "You said: ";
+                                }
+                                for(int i = messages.getFirstVisiblePosition(); i <= messages.getLastVisiblePosition(); i++) {
+                                    View view = messages.getChildAt(i);
+                                    if (view != null) {
+                                        TextView textView = (TextView) view;
+                                        String message = textView.getText().toString();
+                                        if (message!= "" && message!="\n\n\n\n\n\n\n\n") {
+                                            int sent = i % 2;
+                                            if (sent != previous) {
+                                                if (sent == 0) {
+                                                    speak += "They said: ";
+                                                } else {
+                                                    speak += "You said: ";
+                                                }
+                                                previous = sent;
+                                            }
+                                            speak += message;
+                                        }
+                                    }
+                                }
+                                t1.speak(speak, TextToSpeech.QUEUE_ADD, null);
+                                while (t1.isSpeaking()) {}
+                                readAloud.setBackgroundResource(R.drawable.play);
+                            } else{
+                                t1.speak("", TextToSpeech.QUEUE_FLUSH, null);
+                                t1.stop();
+                            }
+                        }
+                    }).start();
                 }
             });
 
