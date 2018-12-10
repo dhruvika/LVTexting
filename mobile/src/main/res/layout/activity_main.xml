@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="?attr/screen_padding"
+    android:paddingRight="?attr/screen_padding"
     tools:context=".MainActivity">
 
 
@@ -27,7 +29,8 @@
         android:background="@color/colorPrimary"
         android:text="Go"
         android:textSize="?attr/font_size"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        android:lineSpacingMultiplier="?attr/line_spacing"
+        android:letterSpacing="?attr/char_spacing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,6 +45,8 @@
         android:onClick="launchSettingsActivity"
         android:text="@string/settings_button"
         android:textSize="?attr/font_size"
+        android:lineSpacingMultiplier="?attr/line_spacing"
+        android:letterSpacing="?attr/char_spacing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

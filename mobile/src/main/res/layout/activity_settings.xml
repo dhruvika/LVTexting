@@ -5,6 +5,8 @@
     android:id="@+id/Settings_Container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="?attr/screen_padding"
+    android:paddingRight="?attr/screen_padding"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -19,14 +21,14 @@
 
     <TextView
         android:textSize="?attr/font_size"
+        android:lineSpacingMultiplier="?attr/line_spacing"
+        android:letterSpacing="?attr/char_spacing"
         android:textColor="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="10sp"
         android:layout_marginBottom="10sp"
-        android:layout_marginLeft="30sp"
-        android:layout_marginRight="30sp"
         android:contentDescription="@string/sample_text"
         android:gravity="center"
         android:text="@string/sample_text_desc"
@@ -61,6 +63,8 @@
                     android:tint="@color/colorPrimaryDark" />
                 <TextView
                     android:textSize="?attr/font_size"
+                    android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -95,6 +99,8 @@
                     android:tint="@color/colorPrimaryDark" />
                 <TextView
                     android:textSize="?attr/font_size"
+                    android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -129,6 +135,8 @@
                     android:tint="@color/colorPrimaryDark" />
                 <TextView
                     android:textSize="?attr/font_size"
+                    android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -163,6 +171,8 @@
                     android:tint="@color/colorPrimaryDark" />
                 <TextView
                     android:textSize="?attr/font_size"
+                    android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -197,6 +207,8 @@
                     android:tint="@color/colorPrimaryDark" />
                 <TextView
                     android:textSize="?attr/font_size"
+                    android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -231,6 +243,8 @@
                     android:tint="@color/colorPrimaryDark" />
                 <TextView
                     android:textSize="?attr/font_size"
+                    android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
