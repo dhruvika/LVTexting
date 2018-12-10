@@ -72,6 +72,7 @@ public class Conversation extends AppCompatActivity {
 
             sendSms();
             setGrid();
+            setHeader();
 
         }
 
@@ -148,6 +149,17 @@ public class Conversation extends AppCompatActivity {
             }
         }
 
+    }
+
+    public void setHeader(){
+        String no = parseNumber();
+        EditText contactHeader = findViewById(R.id.contactHeader);
+        if (!no.equals("")){
+//            View.VISIBLE;
+//            TextView tv = findViewById(R.id.textView);
+//            tv.setVisibility(View.INVISIBLE);
+            contactHeader.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -300,6 +312,10 @@ public class Conversation extends AppCompatActivity {
             public void onClick(View v){
 
                 String smsNumber = parseNumber();
+                if (smsNumber.equals("")){
+                    EditText contactHeader = findViewById(R.id.contactHeader);
+                    smsNumber = contactHeader.getText().toString();
+                }
                 EditText smsEditText = (EditText) findViewById(R.id.smsInput);
                 if (!smsEditText.getText().toString().equals("")){
                     String sms = smsEditText.getText().toString();
