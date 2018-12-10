@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
@@ -19,6 +20,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     List<String> currentMessage;
     Boolean restart = false;
     Boolean paused = false;
+    TableRow clickedRow = null;
 
     private BroadcastReceiver smsReceived = null;
 
@@ -197,6 +201,37 @@ public class MainActivity extends AppCompatActivity {
         loadSMSData();
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0, v.getId(), 0, "Delete");
+        menu.add(0, v.getId(), 0, "Add to Contacts");
+        clickedRow =  (TableRow) findViewById(v.getId());
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getTitle() == "Delete") {
+
+            String contactName = ((TextView) clickedRow.getChildAt(1)).getText().toString();
+            String contactNumber = contactName;
+            TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
+
+            if(messageFetcher.getContactNumber2(contactName) != null){
+                contactNumber = messageFetcher.getContactNumber2(contactName);
+            }
+
+            deleteAddress(contactNumber);
+            clearDashboard();
+            loadSMSData();
+
+        }
+        else {
+            return  false;
+        }
+        return true;
+    }
+
     public boolean hasAllPermissions(Context context, String[] permissions){
         for(String permission: permissions){
             if(ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
@@ -222,38 +257,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public void deleteAddress(String addressName){
-//        String phoneNumber = addressName;
-//        TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
-//
-//        if(messageFetcher.getContactNumber2(addressName) != null)
-//            phoneNumber = messageFetcher.getContactNumber2(addressName);
-//
-//        Uri uriSms = Uri.parse("content://sms/inbox");
-//        Cursor c = this.getContentResolver().query(
-//                uriSms,
-//                new String[] { "_id", "thread_id", "address", "person",
-//                        "date", "body" }, null, null, null);
-//
-//
-//        if (c != null && c.moveToFirst()) {
-//            do {
-////                long id = c.getLong(0);
-//                String address = c.getString(2);
-////                String body = c.getString(5);
-//
-//                if(address.equals(phoneNumber)) {
-////                    this.getContentResolver().delete(
-////                            Uri.parse("content://sms/" + id), "date=?",
-////                            new String[]{c.getString(4)});
-//                    int thread_id = c.getInt(1); //get the thread_id
-//                    this.getContentResolver().delete(Uri.parse("content://sms/conversations/" + thread_id),null,null);
-//                    break;
-//                }
-//
-//            } while (c.moveToNext());
-//        }
-//    }
+    public void deleteAddress(String phoneNumber){
+        Uri uriSms = Uri.parse("content://sms/inbox");
+        Cursor c = this.getContentResolver().query(
+                uriSms,
+                new String[] { "_id", "thread_id", "address", "person",
+                        "date", "body" }, null, null, null);
+
+
+        if (c != null && c.moveToFirst()) {
+            do {
+                String address = c.getString(2);
+
+                if(address.equals(phoneNumber)) {
+                    int thread_id = c.getInt(1); //get the thread_id
+                    this.getContentResolver().delete(Uri.parse("content://sms/conversations/" + thread_id),null,null);
+                    break;
+                }
+
+            } while (c.moveToNext());
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -261,7 +285,6 @@ public class MainActivity extends AppCompatActivity {
             case 1: {
                 // permission granted
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    deleteAddress("6505551355");
                     clearDashboard();
                     loadSMSData();
                     createNotificationChannel();
@@ -362,6 +385,9 @@ public class MainActivity extends AppCompatActivity {
         row.addView(addressText);
         row.addView(dateText);
 
+        // set row id
+        row.setId(conversationInfo.get(1).hashCode());
+
         // Add a listener for clicks
         row.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -380,6 +406,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
             }});
+
+        // Add context menu for deletion
+        row.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                // TODO Auto-generated method stub
+                v.setBackgroundColor(Color.WHITE);
+                v.showContextMenu();
+                return true;
+            }
+        });
+
+        registerForContextMenu(row);
         return row;
     }
 }
