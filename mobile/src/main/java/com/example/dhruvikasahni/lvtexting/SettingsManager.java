@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class SettingsManager {
 
     private static final String FONT_SIZE = "FONT_SIZE";
     private static final String LINE_SPACING = "LINE_SPACING";
+    private static final String CHAR_SPACING = "CHAR_SPACING";
 
     public static void applySettingsToTheme(Context context) {
         /*
@@ -92,6 +94,29 @@ public class SettingsManager {
                 context.getTheme().applyStyle(R.style.LineSpacing_S5, true);
                 break;
         }
+
+        // Apply char spacing
+        int currentCharSpacing = sharedPref.getInt(CHAR_SPACING,0);
+        switch (currentCharSpacing) {
+            case 0:
+                context.getTheme().applyStyle(R.style.CharSpacing_S0, true);
+                break;
+            case 1:
+                context.getTheme().applyStyle(R.style.CharSpacing_S1, true);
+                break;
+            case 2:
+                context.getTheme().applyStyle(R.style.CharSpacing_S2, true);
+                break;
+            case 3:
+                context.getTheme().applyStyle(R.style.CharSpacing_S3, true);
+                break;
+            case 4:
+                context.getTheme().applyStyle(R.style.CharSpacing_S4, true);
+                break;
+            case 5:
+                context.getTheme().applyStyle(R.style.CharSpacing_S5, true);
+                break;
+        }
     }
 
     public static void applyThemeToView(Context context, ViewGroup viewContainer) {
@@ -101,16 +126,21 @@ public class SettingsManager {
         Resources.Theme theme = context.getTheme();
         List<TextView> textViews = getViewsFromGroup(viewContainer);
 
-        int[] attributes = new int[] { R.attr.font_size, R.attr.line_spacing };
+        int[] attributes = new int[] { R.attr.font_size, R.attr.line_spacing, R.attr.char_spacing };
         TypedArray array = theme.obtainStyledAttributes(attributes);
 
         final int fontSize = array.getDimensionPixelSize(0, 20);
         final float lineSpacing = array.getFloat(1, 1.0f);
+        final float charSpacing = array.getFloat(2, 1.0f);
         array.recycle();
 
         for( int i = 0; i < textViews.size(); i++ ) {
             textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
             textViews.get(i).setLineSpacing(0, lineSpacing);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Log.d("Debug", Float.toString(charSpacing));
+                textViews.get(i).setLetterSpacing(charSpacing);
+            }
         }
     }
 
@@ -187,5 +217,23 @@ public class SettingsManager {
 
         // Set preference (Try using commit instead of apply)
         sharedPref.edit().putInt(LINE_SPACING, newVal).apply();
+    }
+
+    public static void changeCharSpacing(Context context, int delta) {
+        /*
+        Change font size by delta
+        */
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        int MAX_LINE_SPACING = 5;
+        int MIN_LINE_SPACING = 0;
+
+        // Calculate new size
+        int currentVal = sharedPref.getInt(CHAR_SPACING, 0);
+        int newVal = currentVal + delta;
+        if (newVal > MAX_LINE_SPACING) { newVal = MAX_LINE_SPACING; }
+        if (newVal < MIN_LINE_SPACING) { newVal = MIN_LINE_SPACING; }
+
+        // Set preference (Try using commit instead of apply)
+        sharedPref.edit().putInt(CHAR_SPACING, newVal).apply();
     }
 }

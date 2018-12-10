@@ -34,4 +34,12 @@
     <style name="LineSpacing.S4"><item name="line_spacing">1.8</item></style>
     <style name="LineSpacing.S5"><item name="line_spacing">2.0</item></style>
 
+    <style name="CharSpacing"> </style>
+    <style name="CharSpacing.S0"><item name="char_spacing">0.0</item></style>
+    <style name="CharSpacing.S1"><item name="char_spacing">0.1</item></style>
+    <style name="CharSpacing.S2"><item name="char_spacing">0.2</item></style>
+    <style name="CharSpacing.S3"><item name="char_spacing">0.3</item></style>
+    <style name="CharSpacing.S4"><item name="char_spacing">0.4</item></style>
+    <style name="CharSpacing.S5"><item name="char_spacing">0.5</item></style>
+
 </resources>

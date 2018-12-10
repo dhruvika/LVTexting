@@ -20,17 +20,17 @@ public class SettingsActivity extends AppCompatActivity {
         int buttonID = v.getId();
         switch (buttonID) {
             case R.id.font_size_i:
-                SettingsManager.changeFontSize(this, 1);
-                break;
+                SettingsManager.changeFontSize(this, 1); break;
             case R.id.font_size_d:
-                SettingsManager.changeFontSize(this, -1);
-                break;
+                SettingsManager.changeFontSize(this, -1); break;
             case R.id.line_space_i:
-                SettingsManager.changeLineSpacing(this, 1);
-                break;
+                SettingsManager.changeLineSpacing(this, 1); break;
             case R.id.line_space_d:
-                SettingsManager.changeLineSpacing(this, -1);
-                break;
+                SettingsManager.changeLineSpacing(this, -1); break;
+            case R.id.char_space_i:
+                SettingsManager.changeCharSpacing(this, 1); break;
+            case R.id.char_space_d:
+                SettingsManager.changeCharSpacing(this, -1); break;
         }
         SettingsManager.markChange();
         SettingsManager.applySettingsToTheme(this);

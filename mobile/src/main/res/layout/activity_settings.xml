@@ -11,6 +11,7 @@
     <TextView
         android:textSize="?attr/font_size"
         android:lineSpacingMultiplier="?attr/line_spacing"
+        android:letterSpacing="?attr/char_spacing"
         android:textColor="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -52,6 +53,7 @@
                 <TextView
                     android:textSize="?attr/font_size"
                     android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -87,6 +89,7 @@
                 <TextView
                     android:textSize="?attr/font_size"
                     android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -122,6 +125,7 @@
                 <TextView
                     android:textSize="?attr/font_size"
                     android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -157,6 +161,7 @@
                 <TextView
                     android:textSize="?attr/font_size"
                     android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -192,6 +197,7 @@
                 <TextView
                     android:textSize="?attr/font_size"
                     android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -227,6 +233,7 @@
                 <TextView
                     android:textSize="?attr/font_size"
                     android:lineSpacingMultiplier="?attr/line_spacing"
+                    android:letterSpacing="?attr/char_spacing"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
