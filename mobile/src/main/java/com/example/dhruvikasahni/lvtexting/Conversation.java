@@ -50,7 +50,7 @@ public class Conversation extends AppCompatActivity {
 
             // Mark all unread messages from this conversation as read
             String phoneNumber = parseNumber();
-            Uri uri = Uri.parse("content://sms/");
+            Uri uri = Uri.parse("content://sms/inbox");
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
             try {
                 while (cursor.moveToNext()) {
@@ -58,7 +58,7 @@ public class Conversation extends AppCompatActivity {
                         String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
                         ContentValues values = new ContentValues();
                         values.put("read", true);
-                        getContentResolver().update(Uri.parse("content://sms/"), values, "_id=" + SmsMessageId, null);
+                        getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + SmsMessageId, null);
                     }
                 }
             }
@@ -120,7 +120,7 @@ public class Conversation extends AppCompatActivity {
 
                     // Mark all unread messages from this conversation as read
                     String phoneNumber = parseNumber();
-                    Uri uri = Uri.parse("content://sms/");
+                    Uri uri = Uri.parse("content://sms/inbox");
                     Cursor cursor = getContentResolver().query(uri, null, null, null, null);
                     try {
                         while (cursor.moveToNext()) {
@@ -128,7 +128,7 @@ public class Conversation extends AppCompatActivity {
                                 String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
                                 ContentValues values = new ContentValues();
                                 values.put("read", true);
-                                getContentResolver().update(Uri.parse("content://sms/"), values, "_id=" + SmsMessageId, null);
+                                getContentResolver().update(Uri.parse("content://sms/inbox"), values, "_id=" + SmsMessageId, null);
                             }
                         }
                     }
@@ -183,7 +183,7 @@ public class Conversation extends AppCompatActivity {
                             previous = 0;
                         }
                         messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
-                        tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+//                        tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
                     }
                 } catch (Exception e){
                     messagesList.add("ERROR!");
