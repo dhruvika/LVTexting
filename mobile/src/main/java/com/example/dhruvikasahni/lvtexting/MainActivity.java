@@ -204,16 +204,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, v.getId(), 0, "Delete");
-        menu.add(0, v.getId(), 0, "Add to Contacts");
         clickedRow =  (TableRow) findViewById(v.getId());
+        String contactName = ((TextView) clickedRow.getChildAt(1)).getText().toString();
+
+        menu.add(0, v.getId(), 0, "Delete " + contactName);
+        menu.add(0, v.getId(), 0, "Add to Contacts");
+
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getTitle() == "Delete") {
+        String contactName = ((TextView) clickedRow.getChildAt(1)).getText().toString();
+        if (item.getTitle().equals("Delete " + contactName)) {
 
-            String contactName = ((TextView) clickedRow.getChildAt(1)).getText().toString();
             String contactNumber = contactName;
             TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
 
