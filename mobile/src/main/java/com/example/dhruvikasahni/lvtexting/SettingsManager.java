@@ -9,6 +9,7 @@ import android.os.Build;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class SettingsManager {
     private static final String FONT_SIZE = "FONT_SIZE";
     private static final String LINE_SPACING = "LINE_SPACING";
     private static final String CHAR_SPACING = "CHAR_SPACING";
+    private static final String BRIGHTNESS = "BRIGHTNESS";
 
     public static void applySettingsToTheme(Context context) {
         /*
@@ -117,6 +119,13 @@ public class SettingsManager {
                 context.getTheme().applyStyle(R.style.CharSpacing_S5, true);
                 break;
         }
+
+        // Apply brightness
+        int currentBrightness = sharedPref.getInt(BRIGHTNESS,100);
+        float backLightValue = (float)currentBrightness/100;
+        WindowManager.LayoutParams layoutParams = ((Activity)context).getWindow().getAttributes(); // Get Params
+        layoutParams.screenBrightness = backLightValue; // Set Value
+        ((Activity)context).getWindow().setAttributes(layoutParams); // Set params
     }
 
     public static void applyThemeToView(Context context, ViewGroup viewContainer) {
@@ -235,5 +244,23 @@ public class SettingsManager {
 
         // Set preference (Try using commit instead of apply)
         sharedPref.edit().putInt(CHAR_SPACING, newVal).apply();
+    }
+
+    public static void changeBrightness(Context context, int delta) {
+        /*
+        Change font size by delta
+        */
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        int MAX_LINE_SPACING = 100;
+        int MIN_LINE_SPACING = 20;
+
+        // Calculate new size
+        int currentVal = sharedPref.getInt(BRIGHTNESS, 100);
+        int newVal = currentVal + (5 * delta);
+        if (newVal > MAX_LINE_SPACING) { newVal = MAX_LINE_SPACING; }
+        if (newVal < MIN_LINE_SPACING) { newVal = MIN_LINE_SPACING; }
+
+        // Set preference (Try using commit instead of apply)
+        sharedPref.edit().putInt(BRIGHTNESS, newVal).apply();
     }
 }

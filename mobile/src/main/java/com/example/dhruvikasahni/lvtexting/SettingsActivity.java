@@ -31,6 +31,10 @@ public class SettingsActivity extends AppCompatActivity {
                 SettingsManager.changeCharSpacing(this, 1); break;
             case R.id.char_space_d:
                 SettingsManager.changeCharSpacing(this, -1); break;
+            case R.id.brightness_i:
+                SettingsManager.changeBrightness(this, 1); break;
+            case R.id.brightness_d:
+                SettingsManager.changeBrightness(this, -1); break;
         }
         SettingsManager.markChange();
         SettingsManager.applySettingsToTheme(this);
