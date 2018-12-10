@@ -40,6 +40,8 @@ public class Conversation extends AppCompatActivity {
 
         setContentView(R.layout.activity_conversation);
 
+
+
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.SEND_SMS) !=
                 PackageManager.PERMISSION_GRANTED) {
