@@ -1,6 +1,7 @@
 package com.example.dhruvikasahni.lvtexting;
 
 //import android.app.Activity;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,12 +12,16 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.telephony.SmsMessage;
 import android.widget.TableLayout;
+
+import com.example.textmessageslibrary.TextMessageFetcher;
 
 import java.util.List;
 import java.util.Random;
@@ -46,9 +51,8 @@ public class SMSReceiver extends BroadcastReceiver {
             String CHANNEL_ID = "message_notifs";
 
             // Create an explicit intent for an Activity in your app
-            Intent notifIntent = new Intent(context, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, 0);
+            Intent notifIntent = new Intent(context, Conversation.class);
+            notifIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             Random rand = new Random();
 
@@ -58,10 +62,21 @@ public class SMSReceiver extends BroadcastReceiver {
                 msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                 msg_from = msgs[i].getOriginatingAddress();
                 String msgBody = msgs[i].getMessageBody();
+
+                notifIntent.putExtra("phoneNumber",msg_from);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, 0);
+
+                // Contact name to be displayed in notification
+                String contact = msg_from;
+
+                if(getContactNumber(msg_from, context) != null){
+                    contact = getContactNumber(msg_from, context);;
+                }
+
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                         // CHANGE ICON
                         .setSmallIcon(R.drawable.play)
-                        .setContentTitle(msg_from)
+                        .setContentTitle(contact)
                         .setContentText(msgBody)
                         .setPriority(Notification.PRIORITY_MAX)
                         .setContentIntent(pendingIntent)
@@ -77,6 +92,24 @@ public class SMSReceiver extends BroadcastReceiver {
         }
 
 
+    }
+
+    /**
+     * Return the phone number of the contact if it exists in the phonebook.
+     * @param contactName contact name assosciated with a phone number
+     * @return String phone numeber if one exists in the contact list, null otherwise.
+     */
+    private String getContactNumber(String contactName, Context context) {
+        String number = null;
+        String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+" like'%" + contactName +"%'";
+        String[] projection = new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER};
+        Cursor c = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                projection, selection, null, null);
+        if (c.moveToFirst()) {
+            number = c.getString(0);
+        }
+        c.close();
+        return number;
     }
 
 
