@@ -336,7 +336,6 @@ public class SettingsManager {
         int MIN_VAL = 0;
 
         // Calculate new value
-        Log.d("Debug", "w");
         int currentVal = sharedPref.getInt(SCREEN_PADDING, 0);
         int newVal = currentVal + delta;
         if (newVal > MAX_VAL) { newVal = MAX_VAL; }
@@ -344,6 +343,5 @@ public class SettingsManager {
 
         // Set preference (Try using commit instead of apply)
         sharedPref.edit().putInt(SCREEN_PADDING, newVal).apply();
-        Log.d("Debug", "z");
     }
 }
