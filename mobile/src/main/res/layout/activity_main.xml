@@ -21,6 +21,7 @@
         android:stretchColumns="1"
         android:textColor="@color/colorBlack"
         android:textSize="?attr/font_size"
+        android:lineSpacingMultiplier="?attr/line_spacing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.38"
@@ -64,6 +65,7 @@
         android:background="@color/colorPrimary"
         android:text="Go"
         android:textSize="?attr/font_size"
+        android:lineSpacingMultiplier="?attr/line_spacing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,6 +80,7 @@
         android:onClick="launchSettingsActivity"
         android:text="@string/settings_button"
         android:textSize="?attr/font_size"
+        android:lineSpacingMultiplier="?attr/line_spacing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

@@ -26,10 +26,10 @@ public class SettingsActivity extends AppCompatActivity {
                 SettingsManager.changeFontSize(this, -1);
                 break;
             case R.id.line_space_i:
-                SettingsManager.changeFontSize(this, 1);
+                SettingsManager.changeLineSpacing(this, 1);
                 break;
             case R.id.line_space_d:
-                SettingsManager.changeFontSize(this, -1);
+                SettingsManager.changeLineSpacing(this, -1);
                 break;
         }
         SettingsManager.markChange();

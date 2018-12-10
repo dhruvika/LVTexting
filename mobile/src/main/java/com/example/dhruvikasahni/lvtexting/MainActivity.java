@@ -192,6 +192,9 @@ public class MainActivity extends AppCompatActivity {
     public void onResume()
     {  // After a pause OR at startup
         super.onResume();
+        if(SettingsManager.shouldApplyToMain())
+            this.recreate();
+
         //Refresh your stuff here
         clearDashboard();
         loadSMSData();

@@ -3,4 +3,8 @@
     <declare-styleable name="FontSize">
         <attr name="font_size" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="LineSpacing">
+        <attr name="line_spacing" format="float"/>
+    </declare-styleable>
 </resources>

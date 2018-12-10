@@ -3,7 +3,7 @@
     <string name="settings_button">Settings</string>
 
     <string name="sample_text">Sample Text</string>
-    <string name="sample_text_desc">This is sample text</string>
+    <string name="sample_text_desc">This is sample text\nThis is a new line</string>
 
     <string name="font_size">Font Size</string>
     <string name="font_size_up_arrow">Font Size Up Arrow</string>

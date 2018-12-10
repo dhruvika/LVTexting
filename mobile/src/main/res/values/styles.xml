@@ -15,9 +15,7 @@
         <item name="android:colorButtonNormal">@color/colorBlack</item>
     </style>
 
-    <style name="FontSize">
-    </style>
-
+    <style name="FontSize"> </style>
     <style name="FontSize.S1"><item name="font_size">12sp</item></style>
     <style name="FontSize.S2"><item name="font_size">14sp</item></style>
     <style name="FontSize.S3"><item name="font_size">16sp</item></style>
@@ -27,5 +25,13 @@
     <style name="FontSize.S7"><item name="font_size">24sp</item></style>
     <style name="FontSize.S8"><item name="font_size">26sp</item></style>
     <style name="FontSize.S9"><item name="font_size">28sp</item></style>
+
+    <style name="LineSpacing"> </style>
+    <style name="LineSpacing.S0"><item name="line_spacing">1.0</item></style>
+    <style name="LineSpacing.S1"><item name="line_spacing">1.2</item></style>
+    <style name="LineSpacing.S2"><item name="line_spacing">1.4</item></style>
+    <style name="LineSpacing.S3"><item name="line_spacing">1.6</item></style>
+    <style name="LineSpacing.S4"><item name="line_spacing">1.8</item></style>
+    <style name="LineSpacing.S5"><item name="line_spacing">2.0</item></style>
 
 </resources>
