@@ -19,11 +19,13 @@ public class SettingsActivity extends AppCompatActivity {
         SettingsManager.applySettingsToTheme(this);
         setContentView(R.layout.activity_settings);
 
+        final float speechRate = SettingsManager.getSpeakerSpeed();
         t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
                     t1.setLanguage(Locale.US);
+                    t1.setSpeechRate(speechRate);
                 }
             }
         });
@@ -88,6 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
         SettingsManager.markChange();
         SettingsManager.applySettingsToTheme(this);
         SettingsManager.applyThemeToView(this, (ViewGroup) findViewById(R.id.Settings_Container));
+        t1.setSpeechRate(SettingsManager.getSpeakerSpeed());
     }
 }
 

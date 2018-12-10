@@ -130,10 +130,21 @@
 
     <Button
         android:id="@+id/call"
-        android:layout_width="42dp"
-        android:layout_height="46dp"
-        android:layout_marginRight="310dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginRight="330dp"
         android:background="@drawable/call"
+        android:color="#293411"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/readAloud"
+        android:layout_width="52dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/play"
         android:color="#293411"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

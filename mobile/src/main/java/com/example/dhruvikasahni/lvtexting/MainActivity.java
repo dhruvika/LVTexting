@@ -1,6 +1,7 @@
 package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -10,11 +11,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     List<String> currentMessage;
     Boolean restart = false;
     Boolean paused = false;
-    TableRow clickedRow = null;
+    TextView clickedContact = null;
 
     private BroadcastReceiver smsReceived = null;
 
@@ -78,12 +81,13 @@ public class MainActivity extends AppCompatActivity {
                     permissions, 1);
         }
 
-
+        final float speechRate = SettingsManager.getSpeakerSpeed();
         t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
                     t1.setLanguage(Locale.US);
+                    t1.setSpeechRate(speechRate);
                 }
             }
         });
@@ -207,17 +211,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        clickedRow =  (TableRow) findViewById(v.getId());
-        String contactName = ((TextView) clickedRow.getChildAt(1)).getText().toString();
+        clickedContact =  findViewById(v.getId());
+        String contactName = clickedContact.getText().toString();
 
         menu.add(0, v.getId(), 0, "Delete " + contactName);
-        menu.add(0, v.getId(), 0, "Add to Contacts");
 
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        String contactName = ((TextView) clickedRow.getChildAt(1)).getText().toString();
+        String contactName = clickedContact.getText().toString();
         if (item.getTitle().equals("Delete " + contactName)) {
 
             String contactNumber = contactName;
@@ -341,6 +344,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchSearchActivity(View v) {
+        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+        startActivity(intent);
+    }
+
     public void clearDashboard(){
         TableLayout dashboard = MainActivity.this.findViewById(R.id.Dashboard);
         dashboard.removeAllViews();
@@ -391,8 +399,11 @@ public class MainActivity extends AppCompatActivity {
         row.addView(addressText);
         row.addView(dateText);
 
+        // Add formatting to row
+        SettingsManager.applyThemeToView(this, row);
+
         // set row id
-        row.setId(conversationInfo.get(1).hashCode());
+        addressText.setId(conversationInfo.get(1).hashCode());
 
         // Add a listener for clicks
         row.setOnClickListener(new View.OnClickListener() {
@@ -419,13 +430,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 // TODO Auto-generated method stub
-                v.setBackgroundColor(Color.WHITE);
                 v.showContextMenu();
                 return true;
             }
         });
 
-        registerForContextMenu(row);
+        registerForContextMenu(addressText);
         return row;
     }
 }

@@ -37,8 +37,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SearchActivity" />
 
-         <!--This class will react on the SMS show a notification-->
+        <!--This class will react on the SMS show a notification-->
                        <!--and start the Main-App afterwards -->
         <receiver android:name=".SMSReceiver" android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="?attr/screen_padding"
+    android:paddingRight="?attr/screen_padding">
+
+    <TableLayout
+        android:id="@+id/search_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="64dp"
+        android:isScrollContainer="true"
+        android:scrollbars="vertical"
+        android:stretchColumns="1"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintBottom_toBottomOf="parent"></TableLayout>
+
+    <EditText
+        android:id="@+id/searchInput"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginRight="72dp"
+        android:ems="10"
+        android:hint="Search"
+        android:inputType="textMultiLine"
+        android:letterSpacing="?attr/char_spacing"
+        android:lineSpacingMultiplier="?attr/line_spacing"
+        android:textSize="?attr/font_size"
+        app:layout_constraintTop_toBottomOf="@+id/search_dashboard" />
+
+    <Button
+        android:layout_width="61dp"
+        android:layout_height="62dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:onClick="onSearch"
+        android:text=">"
+        android:textColor="@color/colorWhite"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_dashboard" />
+
+</android.support.constraint.ConstraintLayout>
