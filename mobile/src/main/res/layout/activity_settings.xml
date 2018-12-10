@@ -10,6 +10,15 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/readAloud"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="-150dp"
+        android:layout_marginRight="-150dp"
+        android:background="@drawable/play"
+        android:color="#293411"/>
+
     <TextView
         android:textSize="?attr/font_size"
         android:lineSpacingMultiplier="?attr/line_spacing"
@@ -25,6 +34,8 @@
         android:text="@string/sample_text_desc"
         android:background="@drawable/textview_border" />
         <!--style="@style/FontStyle.Text"/>-->
+
+
 
     <ScrollView
         android:layout_width="match_parent"
