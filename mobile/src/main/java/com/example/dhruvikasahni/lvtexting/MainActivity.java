@@ -404,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
         // set row id
         addressText.setId(conversationInfo.get(1).hashCode());
 
+
         // Add a listener for clicks
         row.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -429,12 +430,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 // TODO Auto-generated method stub
-                v.showContextMenu();
+                TableRow tableRow = (TableRow) v;
+                TextView addressText = (TextView) tableRow.getChildAt(1);
+
+                // register text view for context menu
+                registerForContextMenu(addressText);
+                addressText.showContextMenu();
+                unregisterForContextMenu(addressText);
+
                 return true;
             }
         });
 
-        registerForContextMenu(addressText);
         return row;
     }
 }
