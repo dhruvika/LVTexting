@@ -312,75 +312,6 @@ public class Conversation extends AppCompatActivity {
 
     }
 
-//    public String contactLookup (String name, Context context){
-//        Uri uri=ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-//        //        Uri uri=Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI,Uri.encode(name));
-//
-//        String[] projection = new String[]{ContactsContract.PhoneLookup.NUMBER};
-//
-//        String number="";
-//        Cursor cursor=context.getContentResolver().query(uri,projection,null,null,null);
-//
-//        if (cursor != null) {
-//            if(cursor.moveToFirst()) {
-//                number=cursor.getString(0);
-//            }
-//            cursor.close();
-//        }
-//
-//        return number;
-//    }
-
-//    public String contactLookup (String name, Context context){
-//        Uri uri=Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,Uri.encode(name));
-//
-//        String[] projection = new String[]{ContactsContract.Contacts.HAS_PHONE_NUMBER};
-//
-//        String contactName="";
-//        Cursor cursor=context.getContentResolver().query(uri,projection,null,null,null);
-//
-//        if (cursor != null) {
-//            if(cursor.moveToFirst()) {
-//                contactName=cursor.getString(0);
-//            }
-//            cursor.close();
-//        }
-//
-//        return contactName;
-//    }
-
-
-//    public String contactLookup (String name){
-//        String[] from = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,ContactsContract.CommonDataKinds.Phone.NUMBER};
-//        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,from,null,null,null);
-////        startManagingCursor(cursor);
-//
-//        String s = "";
-//        int counter = 0;
-//        if(cursor!=null){
-//            while(cursor.moveToNext()&&counter<2){
-//                counter++;
-//                s=s+cursor.getString(0)+' '+cursor.getString(1)+'\n';
-//                for (int c =0; c<cursor.getString(0).length();c++){
-//                    s = s+Boolean.toString(cursor.getString(0).charAt(c)=='R');
-//                }
-//                s = s+'\n';
-//                s = s+ Boolean.toString(cursor.getString(0).equals("Richa"));
-//                if (cursor.getString(0).equals("Caroline Ayala")){
-//                    s = s+ cursor.getString(1);
-//                }
-////                if(cursor.getString(0).equals(name)){
-////                    s = cursor.getString(1);
-//////                    break;
-////                }
-//
-//            }
-//            cursor.close();
-//        }
-//        return  s;
-//
-//    }
-
         public String contactLookup (String name){
         String[] from = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,ContactsContract.CommonDataKinds.Phone.NUMBER};
         Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,from,null,null,null);
@@ -406,8 +337,8 @@ public class Conversation extends AppCompatActivity {
             public void onClick(View v){
                 Boolean nameNotNumber = false;
                 String smsNumber = parseNumber("");
-                EditText smsEditText = (EditText) findViewById(R.id.smsInput);
-                EditText contactHeader = (EditText) findViewById(R.id.contactHeader);
+                EditText smsEditText = findViewById(R.id.smsInput);
+                EditText contactHeader = findViewById(R.id.contactHeader);
 
                 if (smsNumber.equals("")){ //new message
                     for(int c =0;  c<contactHeader.getText().toString().length();c++){
@@ -417,17 +348,10 @@ public class Conversation extends AppCompatActivity {
                     }
                 }
 
-//                smsEditText.setText(Boolean.toString(nameNotNumber));
 
                 if(nameNotNumber){ //need to lookup corresponding number for contact
                     smsNumber = contactLookup(contactHeader.getText().toString());//getApplicationContext()
-//                    smsNumber = messageFetcher.getContactNumber2(smsNumber);
-//                    if (smsNumber == null){
-//                        smsNumber = "";
-//                    }
                     smsNumber = parseNumber(smsNumber); //parse the contact number
-
-//                    smsEditText.setText(smsNumber);
                 }
 
                 Boolean newMessage = false; //so will be able to open up conversation containing this message, if new (or previous messages, if old)
@@ -463,7 +387,7 @@ public class Conversation extends AppCompatActivity {
                     setGrid(); //display messages (including the new one!) [make sure SMS is set to default text app]
                     smsEditText.setText("");
 
-                    if (newMessage){
+                    if (newMessage||nameNotNumber){ //if number inputted/contact name inputted for a new message composed
                         Intent intent = new Intent(Conversation.this, Conversation.class);
                         intent.putExtra("phoneNumber", smsNumber);
                         startActivity(intent);
