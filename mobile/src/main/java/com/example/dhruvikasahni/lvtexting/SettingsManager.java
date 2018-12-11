@@ -35,6 +35,8 @@ public class SettingsManager {
     private static final String SPEAKER_SPEED = "SPEAKER_SPEED";
     private static final String SCREEN_PADDING = "SCREEN_PADDING";
 
+    private static float speakerSpeed = 1.0f;
+
     public static void applySettingsToTheme(Context context) {
         /*
         Apply settings changes to the context's theme
@@ -169,7 +171,7 @@ public class SettingsManager {
 
         // Apply speaker speed
         float currentSpeakerSpeed = sharedPref.getFloat(SPEAKER_SPEED, 1.0f);
-        // TODO apply currentSpeakerSpeed to text to speech playback
+        speakerSpeed = currentSpeakerSpeed;
     }
 
     public static void applyThemeToView(Context context, ViewGroup viewContainer) {
@@ -196,6 +198,10 @@ public class SettingsManager {
             }
         }
         viewContainer.setPadding(screenPadding, 0, screenPadding, 0);
+    }
+
+    public static float getSpeakerSpeed() {
+        return speakerSpeed;
     }
 
     private static List<TextView> getViewsFromGroup(ViewGroup viewGroup) {

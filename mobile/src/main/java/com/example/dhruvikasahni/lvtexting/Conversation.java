@@ -44,6 +44,8 @@ public class Conversation extends AppCompatActivity {
 
         setContentView(R.layout.activity_conversation);
 
+
+
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.SEND_SMS) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -70,6 +72,7 @@ public class Conversation extends AppCompatActivity {
 
             sendSms();
             setGrid();
+            setHeader();
 
         }
 
@@ -148,6 +151,17 @@ public class Conversation extends AppCompatActivity {
 
     }
 
+    public void setHeader(){
+        String no = parseNumber();
+        EditText contactHeader = findViewById(R.id.contactHeader);
+        if (!no.equals("")){
+//            View.VISIBLE;
+//            TextView tv = findViewById(R.id.textView);
+//            tv.setVisibility(View.INVISIBLE);
+            contactHeader.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
 
     public void setGrid(){
@@ -204,9 +218,6 @@ public class Conversation extends AppCompatActivity {
 
             messages.setSelection(ad.getCount());
 
-
-
-
             Button upButton = findViewById(R.id.upButton);
             Button downButton = findViewById(R.id.downButton);
 
@@ -232,12 +243,13 @@ public class Conversation extends AppCompatActivity {
                 }
             });
 
-
+            final float speechRate = SettingsManager.getSpeakerSpeed();
             t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int status) {
                     if(status != TextToSpeech.ERROR) {
                         t1.setLanguage(Locale.US);
+                        t1.setSpeechRate(speechRate);
                     }
                 }
             });
@@ -300,6 +312,10 @@ public class Conversation extends AppCompatActivity {
             public void onClick(View v){
 
                 String smsNumber = parseNumber();
+                if (smsNumber.equals("")){
+                    EditText contactHeader = findViewById(R.id.contactHeader);
+                    smsNumber = contactHeader.getText().toString();
+                }
                 EditText smsEditText = (EditText) findViewById(R.id.smsInput);
                 if (!smsEditText.getText().toString().equals("")){
                     String sms = smsEditText.getText().toString();
@@ -333,11 +349,4 @@ public class Conversation extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
-
-
 }
