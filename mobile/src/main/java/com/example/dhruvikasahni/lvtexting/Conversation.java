@@ -348,7 +348,6 @@ public class Conversation extends AppCompatActivity {
                     }
                 }
 
-
                 if(nameNotNumber){ //need to lookup corresponding number for contact
                     smsNumber = contactLookup(contactHeader.getText().toString());//getApplicationContext()
                     smsNumber = parseNumber(smsNumber); //parse the contact number
@@ -377,9 +376,7 @@ public class Conversation extends AppCompatActivity {
 
                     // Get current date time
                     Date date = new Date();
-                    String strDateFormat = "hh:mm aaa dd MMM";
-                    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-                    String formattedDate = dateFormat. format(date);
+                    Long formattedDate = date.getTime();
 
                     values.put("date", formattedDate);
                     getContentResolver().insert(Uri.parse("content://sms/sent"), values);

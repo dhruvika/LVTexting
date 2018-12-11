@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -218,28 +220,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        String contactName = clickedContact.getText().toString();
-        if (item.getTitle().equals("Delete " + contactName)) {
-
-            String contactNumber = contactName;
-            TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
-
-            if(messageFetcher.getContactNumber2(contactName) != null){
-                contactNumber = messageFetcher.getContactNumber2(contactName);
-            }
-
-            deleteAddress(contactNumber);
-            clearDashboard();
-            loadSMSData();
-
-        }
-        else {
-            return  false;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        String contactName = clickedContact.getText().toString();
+//        if (item.getTitle().equals("Delete " + contactName)) {
+//
+//            String contactNumber = contactName;
+//            TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
+//
+//            if(messageFetcher.getContactNumber2(contactName) != null){
+//                contactNumber = messageFetcher.getContactNumber2(contactName);
+//            }
+//
+//            deleteAddress(contactNumber);
+//            clearDashboard();
+//            loadSMSData();
+//
+//        }
+//        else {
+//            return  false;
+//        }
+//        return true;
+//    }
 
     public boolean hasAllPermissions(Context context, String[] permissions){
         for(String permission: permissions){
@@ -368,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
             TableRow row = addDashboardRow(conversationInfo, messageFetcher);
             if (!addresses.contains(conversationInfo.get(1))) dashboard.addView(row);
         }
+
     }
 
     public TableRow addDashboardRow(ArrayList<String> conversationInfo, TextMessageFetcher messageFetcher){
@@ -405,7 +408,6 @@ public class MainActivity extends AppCompatActivity {
         // set row id
         addressText.setId(conversationInfo.get(1).hashCode());
 
-
         // Add a listener for clicks
         row.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -432,13 +434,45 @@ public class MainActivity extends AppCompatActivity {
             public boolean onLongClick(View v) {
                 // TODO Auto-generated method stub
                 TableRow tableRow = (TableRow) v;
-                TextView addressText = (TextView) tableRow.getChildAt(1);
+                final TextView addressText = (TextView) tableRow.getChildAt(1);
 
-                // register text view for context menu
-                registerForContextMenu(addressText);
-                addressText.showContextMenu();
-                unregisterForContextMenu(addressText);
+//                // register text view for context menu [on click unregister all context menus]
+//                registerForContextMenu(addressText);
+//                addressText.showContextMenu();
+//                unregisterForContextMenu(addressText);
 
+                // create popup menu
+                PopupMenu popup=
+                        new PopupMenu(v.getContext(),v);
+
+                popup.inflate(R.menu.dashboard_menu);
+                final Activity activity = (Activity) v.getContext();
+                popup.setOnMenuItemClickListener(
+                        new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(
+                                    MenuItem item) {
+                                String contactName = addressText.getText().toString();
+                                if (item.getTitle().equals("Delete")) {
+
+                                    String contactNumber = contactName;
+                                    TextMessageFetcher messageFetcher = new TextMessageFetcher(activity);
+
+                                    if(messageFetcher.getContactNumber2(contactName) != null){
+                                        contactNumber = messageFetcher.getContactNumber2(contactName);
+                                    }
+                                    deleteAddress(contactNumber);
+                                    clearDashboard();
+                                    loadSMSData();
+                                }
+                                else {
+                                    return  false;
+                                }
+                                return true;
+                            }
+                        });
+
+                popup.show();
                 return true;
             }
         });
