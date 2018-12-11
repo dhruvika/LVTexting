@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
         // Create the required fields
         TextView readText = new TextView(this);
         if(conversationInfo.get(0).equals("read")){
-            readText.setText("");
+            readText.setText("    ");
         }
         else{
             readText.setText("\u2B24  ");
