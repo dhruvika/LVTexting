@@ -381,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
             readText.setText("");
         }
         else{
-            readText.setText("\u2B24    ");
+            readText.setText("\u2B24  ");
         }
         TextView addressText = new TextView(this);
         String contactName = messageFetcher.getContactName(conversationInfo.get(1));
