@@ -271,12 +271,7 @@ public class Conversation extends AppCompatActivity {
                             if (!t1.isSpeaking()) {
                                 readAloud.setBackgroundResource(R.drawable.stop);
                                 String speak = "";
-                                int previous = messages.getFirstVisiblePosition() % 2;
-                                if (previous == 0) {
-                                    speak += "They said: ";
-                                } else {
-                                    speak += "You said: ";
-                                }
+                                int previous = -1;
                                 for(int i = messages.getFirstVisiblePosition(); i <= messages.getLastVisiblePosition(); i++) {
                                     View view = messages.getChildAt(i);
                                     if (view != null) {
