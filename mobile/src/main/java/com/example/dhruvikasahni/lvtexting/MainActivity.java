@@ -460,6 +460,7 @@ public class MainActivity extends AppCompatActivity {
                                     if(messageFetcher.getContactNumber2(contactName) != null){
                                         contactNumber = messageFetcher.getContactNumber2(contactName);
                                     }
+                                    contactNumber = parseNumber(contactNumber);
                                     deleteAddress(contactNumber);
                                     clearDashboard();
                                     loadSMSData();
