@@ -4,10 +4,12 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +25,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.textmessageslibrary.TextMessageFetcher;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -55,7 +59,7 @@ public class Conversation extends AppCompatActivity {
         } else { //Permission already given
 
             // Mark all unread messages from this conversation as read
-            String phoneNumber = parseNumber();
+            String phoneNumber = parseNumber("");
             Uri uri = Uri.parse("content://sms/inbox");
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
             try {
@@ -80,7 +84,7 @@ public class Conversation extends AppCompatActivity {
         call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uri = "tel:" + parseNumber();
+                String uri = "tel:" + parseNumber("");
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse(uri));
                 startActivity(intent);
@@ -99,9 +103,13 @@ public class Conversation extends AppCompatActivity {
         return cursor.getString(cursor.getColumnIndex("address")).equals(no)||cursor.getString(cursor.getColumnIndex("address")).equals("+1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals("1"+no)||cursor.getString(cursor.getColumnIndex("address")).equals(no.substring(1));
     }
 
-    public String parseNumber(){ //@Yasmin, here is the helper fxn to obtain the number
-        Bundle bundle = getIntent().getExtras();
-        String noStr = bundle.getString("phoneNumber");
+    public String parseNumber(String noStr){ //@Yasmin, here is the helper fxn to obtain the number
+
+        if (noStr.equals("")){
+            Bundle bundle = getIntent().getExtras();
+            noStr = bundle.getString("phoneNumber");
+        }
+
         String no = "";
         for (int c=0; c<noStr.length();c++){
             if (Character.isDigit(noStr.charAt(c))){
@@ -126,7 +134,7 @@ public class Conversation extends AppCompatActivity {
                         PackageManager.PERMISSION_GRANTED) {
 
                     // Mark all unread messages from this conversation as read
-                    String phoneNumber = parseNumber();
+                    String phoneNumber = parseNumber("");
                     Uri uri = Uri.parse("content://sms/inbox");
                     Cursor cursor = getContentResolver().query(uri, null, null, null, null);
                     try {
@@ -152,7 +160,7 @@ public class Conversation extends AppCompatActivity {
     }
 
     public void setHeader(){
-        String no = parseNumber();
+        String no = parseNumber("");
         EditText contactHeader = findViewById(R.id.contactHeader);
         if (!no.equals("")){
 //            View.VISIBLE;
@@ -165,7 +173,7 @@ public class Conversation extends AppCompatActivity {
 
 
     public void setGrid(){
-        String no = parseNumber();
+        String no = parseNumber("");
         if (!no.equals("")){
             final GridView messages = findViewById(R.id.messages);
 
@@ -304,19 +312,130 @@ public class Conversation extends AppCompatActivity {
 
     }
 
+//    public String contactLookup (String name, Context context){
+//        Uri uri=ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+//        //        Uri uri=Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_FILTER_URI,Uri.encode(name));
+//
+//        String[] projection = new String[]{ContactsContract.PhoneLookup.NUMBER};
+//
+//        String number="";
+//        Cursor cursor=context.getContentResolver().query(uri,projection,null,null,null);
+//
+//        if (cursor != null) {
+//            if(cursor.moveToFirst()) {
+//                number=cursor.getString(0);
+//            }
+//            cursor.close();
+//        }
+//
+//        return number;
+//    }
+
+//    public String contactLookup (String name, Context context){
+//        Uri uri=Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,Uri.encode(name));
+//
+//        String[] projection = new String[]{ContactsContract.Contacts.HAS_PHONE_NUMBER};
+//
+//        String contactName="";
+//        Cursor cursor=context.getContentResolver().query(uri,projection,null,null,null);
+//
+//        if (cursor != null) {
+//            if(cursor.moveToFirst()) {
+//                contactName=cursor.getString(0);
+//            }
+//            cursor.close();
+//        }
+//
+//        return contactName;
+//    }
+
+
+//    public String contactLookup (String name){
+//        String[] from = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,ContactsContract.CommonDataKinds.Phone.NUMBER};
+//        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,from,null,null,null);
+////        startManagingCursor(cursor);
+//
+//        String s = "";
+//        int counter = 0;
+//        if(cursor!=null){
+//            while(cursor.moveToNext()&&counter<2){
+//                counter++;
+//                s=s+cursor.getString(0)+' '+cursor.getString(1)+'\n';
+//                for (int c =0; c<cursor.getString(0).length();c++){
+//                    s = s+Boolean.toString(cursor.getString(0).charAt(c)=='R');
+//                }
+//                s = s+'\n';
+//                s = s+ Boolean.toString(cursor.getString(0).equals("Richa"));
+//                if (cursor.getString(0).equals("Caroline Ayala")){
+//                    s = s+ cursor.getString(1);
+//                }
+////                if(cursor.getString(0).equals(name)){
+////                    s = cursor.getString(1);
+//////                    break;
+////                }
+//
+//            }
+//            cursor.close();
+//        }
+//        return  s;
+//
+//    }
+
+        public String contactLookup (String name){
+        String[] from = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,ContactsContract.CommonDataKinds.Phone.NUMBER};
+        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,from,null,null,null);
+
+        String s = "";
+        if(cursor!=null){
+            while(cursor.moveToNext()){
+                if (cursor.getString(0).equals(name)){
+                    s = cursor.getString(1);
+                }
+            }
+            cursor.close();
+        }
+        return  s;
+
+    }
 
     public void sendSms(){
         Button sendButton = findViewById(R.id.sendButton);
+        final TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
-                String smsNumber = parseNumber();
-                if (smsNumber.equals("")){
-                    EditText contactHeader = findViewById(R.id.contactHeader);
-                    smsNumber = contactHeader.getText().toString();
-                }
+                Boolean nameNotNumber = false;
+                String smsNumber = parseNumber("");
                 EditText smsEditText = (EditText) findViewById(R.id.smsInput);
+                EditText contactHeader = (EditText) findViewById(R.id.contactHeader);
+
+                if (smsNumber.equals("")){ //new message
+                    for(int c =0;  c<contactHeader.getText().toString().length();c++){
+                        if (!Character.isDigit(contactHeader.getText().toString().charAt(c))){
+                            nameNotNumber = true; //contact name instead of number has been inputted
+                        }
+                    }
+                }
+
+//                smsEditText.setText(Boolean.toString(nameNotNumber));
+
+                if(nameNotNumber){ //need to lookup corresponding number for contact
+                    smsNumber = contactLookup(contactHeader.getText().toString());//getApplicationContext()
+//                    smsNumber = messageFetcher.getContactNumber2(smsNumber);
+//                    if (smsNumber == null){
+//                        smsNumber = "";
+//                    }
+                    smsNumber = parseNumber(smsNumber); //parse the contact number
+
+//                    smsEditText.setText(smsNumber);
+                }
+
+                Boolean newMessage = false; //so will be able to open up conversation containing this message, if new (or previous messages, if old)
+                if (smsNumber.equals("")){
+                    newMessage = true;
+                    smsNumber = contactHeader.getText().toString();
+
+                }
                 if (!smsEditText.getText().toString().equals("")){
                     String sms = smsEditText.getText().toString();
                     String scAddress = null;
@@ -343,6 +462,12 @@ public class Conversation extends AppCompatActivity {
 
                     setGrid(); //display messages (including the new one!) [make sure SMS is set to default text app]
                     smsEditText.setText("");
+
+                    if (newMessage){
+                        Intent intent = new Intent(Conversation.this, Conversation.class);
+                        intent.putExtra("phoneNumber", smsNumber);
+                        startActivity(intent);
+                    }
 
                 }
 

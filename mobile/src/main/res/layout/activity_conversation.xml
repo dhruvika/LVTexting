@@ -12,8 +12,8 @@
 
     <EditText
         android:id="@+id/smsInput"
-        android:layout_width="276dp"
-        android:layout_height="66dp"
+        android:layout_width="300dp"
+        android:layout_height="99dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -30,27 +30,74 @@
         app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.905" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/sendButton"
-        android:layout_width="63dp"
-        android:layout_height="68dp"
+        android:layout_width="36dp"
+        android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="8dp"
+        android:background="@android:color/white"
         android:text=">"
-        android:textColor="@color/colorWhite"
+        android:textColor="@android:color/black"
         android:textSize="30sp"
+        style="?android:attr/borderlessButtonStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/smsInput"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.904" />
+        app:layout_constraintVertical_bias="0.984" />
+
+    <Button
+        android:id="@+id/downButton"
+        android:layout_width="36dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/white"
+        android:text="v"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        style="?android:attr/borderlessButtonStyle"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/smsInput"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.884" />
+
+    <Button
+        android:id="@+id/upButton"
+        android:layout_width="36dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/white"
+        android:text="^"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        style="?android:attr/borderlessButtonStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/smsInput"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.806" />
 
     <TextView
         android:id="@+id/textView"
@@ -89,44 +136,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/upButton"
-        android:layout_width="56dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="^"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/downButton"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/downButton"
-        android:layout_width="56dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="252dp"
-        android:layout_marginRight="252dp"
-        android:layout_marginBottom="8dp"
-        android:text="v"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messages"
-        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/call"

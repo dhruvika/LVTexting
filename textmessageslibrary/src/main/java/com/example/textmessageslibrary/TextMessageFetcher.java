@@ -178,8 +178,8 @@ public class TextMessageFetcher {
 
     /**
      * Return the phone number of the contact if it exists in the phonebook.
-     * @param contactName contact name assosciated with a phone number
-     * @return String phone numeber if one exists in the contact list, null otherwise.
+     * @param contactName contact name associated with a phone number
+     * @return String phone number if one exists in the contact list, null otherwise.
      */
     public String getContactNumber2(String contactName) {
         String number = null;
