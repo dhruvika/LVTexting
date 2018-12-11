@@ -220,28 +220,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        String contactName = clickedContact.getText().toString();
-//        if (item.getTitle().equals("Delete " + contactName)) {
-//
-//            String contactNumber = contactName;
-//            TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
-//
-//            if(messageFetcher.getContactNumber2(contactName) != null){
-//                contactNumber = messageFetcher.getContactNumber2(contactName);
-//            }
-//
-//            deleteAddress(contactNumber);
-//            clearDashboard();
-//            loadSMSData();
-//
-//        }
-//        else {
-//            return  false;
-//        }
-//        return true;
-//    }
+    public String parseNumber(String noStr){ //@Yasmin, here is the helper fxn to obtain the number
+
+        if (noStr.equals("")){
+            Bundle bundle = getIntent().getExtras();
+            noStr = bundle.getString("phoneNumber");
+        }
+
+        String no = "";
+        for (int c=0; c<noStr.length();c++){
+            if (Character.isDigit(noStr.charAt(c))){
+                no = no + noStr.charAt(c);
+            }
+
+        }
+        if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
+            no = no.substring(1);
+        }
+
+        return no;
+    }
 
     public boolean hasAllPermissions(Context context, String[] permissions){
         for(String permission: permissions){
@@ -407,6 +405,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set row id
         addressText.setId(conversationInfo.get(1).hashCode());
+
 
         // Add a listener for clicks
         row.setOnClickListener(new View.OnClickListener() {

@@ -43,7 +43,8 @@ public class SettingsActivity extends AppCompatActivity {
                                     "Line spacing, " +
                                     "Character spacing, " +
                                     "Screen padding, " +
-                                    "Brightness";
+                                    "Brightness, " +
+                                    "Speaker speed.";
                             t1.speak(toSpeak, TextToSpeech.QUEUE_ADD, null);
                             while (t1.isSpeaking()) {}
                             readAloud.setBackgroundResource(R.drawable.play);

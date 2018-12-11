@@ -271,12 +271,7 @@ public class Conversation extends AppCompatActivity {
                             if (!t1.isSpeaking()) {
                                 readAloud.setBackgroundResource(R.drawable.stop);
                                 String speak = "";
-                                int previous = messages.getFirstVisiblePosition() % 2;
-                                if (previous == 0) {
-                                    speak += "They said: ";
-                                } else {
-                                    speak += "You said: ";
-                                }
+                                int previous = -1;
                                 for(int i = messages.getFirstVisiblePosition(); i <= messages.getLastVisiblePosition(); i++) {
                                     View view = messages.getChildAt(i);
                                     if (view != null) {
@@ -331,7 +326,6 @@ public class Conversation extends AppCompatActivity {
 
     public void sendSms(){
         Button sendButton = findViewById(R.id.sendButton);
-        final TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -354,7 +348,7 @@ public class Conversation extends AppCompatActivity {
                 }
 
                 Boolean newMessage = false; //so will be able to open up conversation containing this message, if new (or previous messages, if old)
-                if (smsNumber.equals("")){
+                if (smsNumber.equals("")){ //new message, where inputted contact number
                     newMessage = true;
                     smsNumber = contactHeader.getText().toString();
 
