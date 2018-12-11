@@ -218,6 +218,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public String parseNumber(String noStr){ //@Yasmin, here is the helper fxn to obtain the number
+
+        if (noStr.equals("")){
+            Bundle bundle = getIntent().getExtras();
+            noStr = bundle.getString("phoneNumber");
+        }
+
+        String no = "";
+        for (int c=0; c<noStr.length();c++){
+            if (Character.isDigit(noStr.charAt(c))){
+                no = no + noStr.charAt(c);
+            }
+
+        }
+        if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
+            no = no.substring(1);
+        }
+
+        return no;
+    }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         String contactName = clickedContact.getText().toString();
@@ -229,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             if(messageFetcher.getContactNumber2(contactName) != null){
                 contactNumber = messageFetcher.getContactNumber2(contactName);
             }
-
+            contactNumber = parseNumber(contactNumber);
             deleteAddress(contactNumber);
             clearDashboard();
             loadSMSData();

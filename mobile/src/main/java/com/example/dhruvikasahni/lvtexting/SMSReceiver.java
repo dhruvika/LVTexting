@@ -29,6 +29,41 @@ import java.util.Random;
 public class SMSReceiver extends BroadcastReceiver {
     public static final String SMS_URI = "content://sms";
 
+    public String parseNumber(String noStr){ //@Yasmin, here is the helper fxn to obtain the number
+
+        String no = "";
+        for (int c=0; c<noStr.length();c++){
+            if (Character.isDigit(noStr.charAt(c))){
+                no = no + noStr.charAt(c);
+            }
+
+        }
+        if (no.length()>10&&no.length()!=12){//length 10 for standard US numbers, length 12 for automated numbers
+            no = no.substring(1);
+        }
+
+        return no;
+    }
+
+    public String contactLookup (String name, Context context){
+        String[] from = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,ContactsContract.CommonDataKinds.Phone.NUMBER};
+        Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,from,null,null,null);
+        name = parseNumber(name);
+        String s = "";
+        if(cursor!=null){
+            while(cursor.moveToNext()){
+                if (parseNumber(cursor.getString(1)).equals(name)){
+                    s = cursor.getString(0);
+                }
+            }
+            cursor.close();
+        }
+        return  s;
+
+    }
+
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
         // Get SMS map from Intent
@@ -51,7 +86,7 @@ public class SMSReceiver extends BroadcastReceiver {
             String CHANNEL_ID = "message_notifs";
 
             // Create an explicit intent for an Activity in your app
-            Intent notifIntent = new Intent(context, Conversation.class);
+            Intent notifIntent = new Intent(context, MainActivity.class);
             notifIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             Random rand = new Random();
@@ -63,19 +98,18 @@ public class SMSReceiver extends BroadcastReceiver {
                 msg_from = msgs[i].getOriginatingAddress();
                 String msgBody = msgs[i].getMessageBody();
 
-                notifIntent.putExtra("phoneNumber",msg_from);
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notifIntent, 0);
 
                 // Contact name to be displayed in notification
-                String contact = msg_from;
+                String contact = parseNumber(msg_from);
 
-                if(getContactNumber(msg_from, context) != null){
-                    contact = getContactNumber(msg_from, context);;
+                if(!contactLookup(contact,context).equals("")){
+                    contact = contactLookup(contact,context);//getContactNumber(msg_from, context);;
                 }
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                         // CHANGE ICON
-                        .setSmallIcon(R.drawable.play)
+                        .setSmallIcon(R.mipmap.ic_launcher)//.setSmallIcon(R.drawable.play)
                         .setContentTitle(contact)
                         .setContentText(msgBody)
                         .setPriority(Notification.PRIORITY_MAX)

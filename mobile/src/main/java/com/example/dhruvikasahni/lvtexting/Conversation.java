@@ -331,7 +331,6 @@ public class Conversation extends AppCompatActivity {
 
     public void sendSms(){
         Button sendButton = findViewById(R.id.sendButton);
-        final TextMessageFetcher messageFetcher = new TextMessageFetcher(this);
         sendButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -355,7 +354,7 @@ public class Conversation extends AppCompatActivity {
                 }
 
                 Boolean newMessage = false; //so will be able to open up conversation containing this message, if new (or previous messages, if old)
-                if (smsNumber.equals("")){
+                if (smsNumber.equals("")){ //new message, where inputted contact number
                     newMessage = true;
                     smsNumber = contactHeader.getText().toString();
 
@@ -377,9 +376,7 @@ public class Conversation extends AppCompatActivity {
 
                     // Get current date time
                     Date date = new Date();
-                    String strDateFormat = "hh:mm aaa dd MMM";
-                    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-                    String formattedDate = dateFormat. format(date);
+                    Long formattedDate = date.getTime();
 
                     values.put("date", formattedDate);
                     getContentResolver().insert(Uri.parse("content://sms/sent"), values);
