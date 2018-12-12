@@ -4,26 +4,39 @@
 
 We plan on getting (SMS) onto the Google Play store for easy download and installation, but until then, the only option for installation on a device is by making your device a development device.
 
-To install (SMS) on your android device you must do the following:
+To install (SMS) on your Android device you must do the following:
 - Install Android Studio a compatible computer. Android Studio can be downloaded [here](https://developer.android.com/studio/ "Android Studio")
 - Download this repository (SMS) as a ZIP file
 - Extract the downloaded ZIP file into a folder
 - In Android Studio, go to `File -> New -> Import Project` and import the folder containing the downloaded ZIP file contents. This should open the project in Android Studio
 - Follow the instructions [here](https://developer.android.com/studio/run/device "Run apps on a hardware device") to setups your device for development and run the app on your device.
 
-The app must be set as your default SMS app in order access features such as sending deleting messages, so when prompted to do so, tap "Yes". With that, (SMS) should be fully functionaly as your SMS app
+The app must be set as your default SMS app in order access features such as sending deleting messages, so when prompted to do so, tap "Yes". With that, (SMS) should be fully functional as your SMS app
 
 ## How to Use Guide
 
 The app has a couple of different screens that can be accessed and used. They are explained here
 
-### Dashbaord Screen
+### Dashboard Screen
 TODO
+-Contact & date last contacted representation in dashboard
+-Unread/read tokens
+-Clearing a chat
+-Push notifications
+
 Pressing the readaloud button on the top right of the screen will read aloud the names and dates of the different conversations, beginning with unread messages and then continuing to read messages. While the conversations are being read, pressing the GO button will redirect the app to the conversation that is being read at that time.
 
 ### Conversation Screen
-TODO
-Pressing the readaloud button on the top right of the screen will read aloud all of the messages that are present on the screen, distinguishing between messages that are sent and received.
+
+The conversation screen is the portion of the app that represents the actual contents of the messages exchanged between the user and their contact. As such, SMS is able to parse conversations between the user and any US number, at the moment. In order to add support for numbers with non +1 country codes, a developer would have to add in cases to support checking all possible ways a phone number can be represented in that country.
+
+SMS then is able to query the phone's built-in message database, and displays all messages that the user sent and received from this contact. All messages are separated using a blank line, and all user sent messages are right justified, while all received messages are left justified. All messages are wrapped, such that even if they take up more than one row, the entire message will be represented.
+
+Messages can be scrolled through either discretely (using the up and down arrows) or continuously (by dragging a finger up and down). By tapping on a message once, the timestamp associated with that message appears. With another tap, the timestamp disappears. Additionally, in order to copy the contents of a message, the user can long-press on a message, and it will be added to their clipboard, ready to paste.
+
+At the bottom of the conversation screen, the user can input a message and send it off to the current contact. In the event that the user is composing a new SMS, a field in the center-top of the screen will appear, where the user can type in a contact name, or a number, to send the message off to. Finally, in the top-left of the screen, the user can call the contact.
+
+Pressing the readaloud button on the top right of the screen will read aloud all of the messages that are present on the screen, distinguishing between messages that are sent and received, with a "you said" before all messages you sent, and a "they said" before all messages you received.
 
 ### Settings Screen
 Features a text preview in the top third of the screen and a number of settings in the bottom two thirds of the screen. Each setting has an "Increase" button on the right and a "Decrease" button on the left, with an up and down facing arrow respectively. These will increase or decrease the relevant setting, changing the apps global settings, as well as the text preview on the screen. Pressing the readaloud button on the top right of the screen will read aloud all of the available settings in order.
