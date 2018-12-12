@@ -136,7 +136,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        registerForContextMenu(row);
+        //registerForContextMenu(row);
         return row;
     }
 }
