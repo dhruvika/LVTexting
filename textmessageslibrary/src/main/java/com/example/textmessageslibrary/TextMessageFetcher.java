@@ -116,6 +116,7 @@ public class TextMessageFetcher {
                     conversation.add("read");
                     conversation.add(address);
                     conversation.add(date);
+                    conversation.add(body);
                     allConversations.add(conversation);
                 }
                 cursor.moveToNext();

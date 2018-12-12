@@ -39,7 +39,6 @@ public class SearchActivity extends AppCompatActivity {
             if(conversationInfo.get(3).contains(input))
                 messageList.add(conversationInfo);
         }
-
         for (ArrayList<String> conversationInfo : readConversations) {
             if(conversationInfo.get(3).contains(input))
                 messageList.add(conversationInfo);
@@ -135,8 +134,7 @@ public class SearchActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        registerForContextMenu(row);
+        //registerForContextMenu(row);
         return row;
     }
 }
