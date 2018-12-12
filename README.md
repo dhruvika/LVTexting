@@ -13,6 +13,22 @@ To install (SMS) on your android device you must do the following:
 
 The app must be set as your default SMS app in order access features such as sending deleting messages, so when prompted to do so, tap "Yes". With that, (SMS) should be fully functionaly as your SMS app
 
+## How to Use Guide
+
+The app has a couple of different screens that can be accessed and used. They are explained here
+
+### Dashbaord Screen
+TODO
+
+### Conversation Screen
+TODO
+
+### Settings Screen
+Features a text preview in the top third of the screen and a number of settings in the bottom two thirds of the screen. Each setting has an "Increase" button on the right and a "Decrease" button on the left, with an up and down facing arrow respectively. These will increase or decrease the relevant setting, changing the apps global settings, as well as the text preview on the screen.
+
+### Search Screen
+Features a search bar and search button. Pressing the search button will fill the screen with conversations containing the query input in the search bar.
+
 ## Development Guide
 
 To get started developing SMS you can do the following:
