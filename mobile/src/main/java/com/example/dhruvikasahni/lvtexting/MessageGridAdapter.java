@@ -68,7 +68,10 @@ public class MessageGridAdapter extends BaseAdapter {
         if(i%2==1){ //if user-sent message
             tv.setGravity(RIGHT);
         }
+//        registerForContextMenu(tv);
         return tv;
+
+
 
 
     }
