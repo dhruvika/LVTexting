@@ -200,6 +200,27 @@ public class SettingsManager {
         viewContainer.setPadding(screenPadding, 0, screenPadding, 0);
     }
 
+    public static void applyThemeToView(Context context, TextView textView) {
+        /*
+        Apply theme changes to a given viewGroup. Only use this for preference screen
+         */
+        Resources.Theme theme = context.getTheme();
+
+        int[] attributes = new int[] { R.attr.font_size, R.attr.line_spacing, R.attr.char_spacing, R.attr.screen_padding };
+        TypedArray array = theme.obtainStyledAttributes(attributes);
+
+        final int fontSize = array.getDimensionPixelSize(0, 20);
+        final float lineSpacing = array.getFloat(1, 1.0f);
+        final float charSpacing = array.getFloat(2, 1.0f);
+        array.recycle();
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
+        textView.setLineSpacing(0, lineSpacing);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            textView.setLetterSpacing(charSpacing);
+        }
+    }
+
     public static float getSpeakerSpeed() {
         return speakerSpeed;
     }

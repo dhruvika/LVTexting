@@ -68,6 +68,10 @@ public class MessageGridAdapter extends BaseAdapter {
         if(i%2==1){ //if user-sent message
             tv.setGravity(RIGHT);
         }
+
+        // Add formatting to row
+        SettingsManager.applyThemeToView(this.context, tv);
+
         return tv;
 
 
