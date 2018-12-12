@@ -176,7 +176,7 @@ public class SettingsManager {
 
     public static void applyThemeToView(Context context, ViewGroup viewContainer) {
         /*
-        Apply theme changes to a given viewGroup. Only use this for preference screen
+        Apply theme changes to a given viewGroup. Should limit use to preference screen
          */
         Resources.Theme theme = context.getTheme();
         List<TextView> textViews = getViewsFromGroup(viewContainer);

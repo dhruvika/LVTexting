@@ -2,6 +2,7 @@ package com.example.dhruvikasahni.lvtexting;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -210,10 +211,10 @@ public class Conversation extends AppCompatActivity {
 
 
     public void setGrid(){
+        final Activity activityContext = this;
         String no = parseNumber("");
         if (!no.equals("")){
             final GridView messages = findViewById(R.id.messages);
-
 
             List<String> messagesList = new ArrayList<String>();
             List<String> messagesDtList = new ArrayList<String>();
@@ -275,8 +276,7 @@ public class Conversation extends AppCompatActivity {
 
             cursor.close();
 
-
-            final MessageGridAdapter  ad = new MessageGridAdapter(this, messagesArray);
+            final MessageGridAdapter  ad = new MessageGridAdapter(activityContext, messagesArray);
             messages.setAdapter(ad);
 
             messages.setSelection(ad.getCount());
@@ -422,7 +422,7 @@ public class Conversation extends AppCompatActivity {
                         messagesArray[i] = pristinemessagesArray[i];
                     }
 
-                    final MessageGridAdapter  ad = new MessageGridAdapter(getApplicationContext(), messagesArray);
+                    final MessageGridAdapter ad = new MessageGridAdapter(activityContext, messagesArray);
                     messages.setAdapter(ad);
                     messages.setSelection(pos);//i
 //                    EditText smsInput = findViewById(R.id.smsInput);

@@ -69,7 +69,7 @@ public class MessageGridAdapter extends BaseAdapter {
             tv.setGravity(RIGHT);
         }
 
-        // Add formatting to row
+        // Add formatting to textView
         SettingsManager.applyThemeToView(this.context, tv);
 
 //        registerForContextMenu(tv);
