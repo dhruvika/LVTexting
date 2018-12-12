@@ -49,6 +49,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     TextToSpeech t1;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                             ArrayList<ArrayList<String>> unreadConversations = messageFetcher.fetchUnreadConversations();
                             String speak = "";
                             readAloud.setBackgroundResource(R.drawable.stop);
-
+                            Set<String> seenAddresses = new HashSet<>();
                             if (readConversations.isEmpty() && unreadConversations.isEmpty()) {
                                 t1.speak("No new messages", TextToSpeech.QUEUE_FLUSH, null);
                                 return;
@@ -117,11 +118,14 @@ public class MainActivity extends AppCompatActivity {
                                 speak += "Unread from: ";
                                 for (ArrayList<String> conversationInfo : unreadConversations) {
                                     messageList.add(conversationInfo);
+                                    seenAddresses.add(conversationInfo.get(1));
                                 }
                             }
                             if (!readConversations.isEmpty()) {
                                 for (ArrayList<String> conversationInfo : readConversations) {
-                                    messageList.add(conversationInfo);
+                                    if (! seenAddresses.contains(conversationInfo.get(1))) {
+                                        messageList.add(conversationInfo);
+                                    }
                                 }
                             }
                             Boolean readingUnread = true;
