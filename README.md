@@ -22,3 +22,5 @@ To get started developing SMS you can do the following:
 - In Android Studio, go to `File -> New -> Import Project` and import the folder containing the downloaded ZIP file contents. This should open the project in Android Studio
 
 Now your ready to start developing!
+
+For those interested in developing the app, but unsure where to begin, [here](https://developer.android.com/guide/slices/getting-started "Android Getting Started") is Android's Getting Started page, where you can get started with Android app development.
