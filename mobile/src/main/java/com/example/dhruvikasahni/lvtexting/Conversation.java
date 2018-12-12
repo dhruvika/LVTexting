@@ -3,9 +3,12 @@ package com.example.dhruvikasahni.lvtexting;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,6 +82,7 @@ public class Conversation extends AppCompatActivity {
             sendSms();
             setGrid();
             setHeader();
+            handleNewMessages();
 
         }
 
@@ -90,6 +96,35 @@ public class Conversation extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void handleNewMessages(){
+        // Register a new broadcast receiver
+        BroadcastReceiver smsReceived = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String currentChatNumber = parseNumber("");
+
+                SmsMessage[] msgs;
+                Bundle bundle = intent.getExtras();
+                String msg_from;
+                Object[] pdus = (Object[]) bundle.get("pdus");
+                msgs = new SmsMessage[pdus.length];
+                for (int i = 0; i < msgs.length; i++) {
+                    msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                    msg_from = msgs[i].getOriginatingAddress();
+                    if(currentChatNumber.equals(msg_from)){
+                        setGrid();
+                    }
+                }
+
+//                setGrid();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        registerReceiver(smsReceived, intentFilter);
     }
 
     @Override
