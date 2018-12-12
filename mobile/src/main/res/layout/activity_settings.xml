@@ -54,17 +54,19 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/font_size_d"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/font_size_down_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_down_float"
                         android:tint="@color/colorPrimaryDark" />
 
@@ -83,27 +85,31 @@
                     <ImageButton
                         android:id="@+id/font_size_i"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/font_size_up_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_up_float"
                         android:tint="@color/colorPrimaryDark" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/line_space_d"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/line_space_down_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_down_float"
                         android:tint="@color/colorPrimaryDark" />
 
@@ -122,27 +128,31 @@
                     <ImageButton
                         android:id="@+id/line_space_i"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/line_space_up_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_up_float"
                         android:tint="@color/colorPrimaryDark" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/char_space_d"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/char_space_down_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_down_float"
                         android:tint="@color/colorPrimaryDark" />
 
@@ -161,27 +171,31 @@
                     <ImageButton
                         android:id="@+id/char_space_i"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/char_space_up_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_up_float"
                         android:tint="@color/colorPrimaryDark" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/screen_padding_d"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/screen_padding_down_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_down_float"
                         android:tint="@color/colorPrimaryDark" />
 
@@ -200,27 +214,31 @@
                     <ImageButton
                         android:id="@+id/screen_padding_i"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/screen_padding_up_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_up_float"
                         android:tint="@color/colorPrimaryDark" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/brightness_d"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/brightness_down_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_down_float"
                         android:tint="@color/colorPrimaryDark" />
 
@@ -239,27 +257,31 @@
                     <ImageButton
                         android:id="@+id/brightness_i"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/brightness_up_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_up_float"
                         android:tint="@color/colorPrimaryDark" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/speaker_speed_d"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/speaker_speed_down_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_down_float"
                         android:tint="@color/colorPrimaryDark" />
 
@@ -278,10 +300,12 @@
                     <ImageButton
                         android:id="@+id/speaker_speed_i"
                         android:layout_width="60dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="80dp"
                         android:background="@color/colorPrimary"
                         android:contentDescription="@string/speaker_speed_up_arrow"
                         android:onClick="onChangePref"
+                        android:scaleType="fitCenter"
+                        android:padding="8dp"
                         android:src="@android:drawable/arrow_up_float"
                         android:tint="@color/colorPrimaryDark" />
                 </LinearLayout>
