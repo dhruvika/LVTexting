@@ -109,7 +109,7 @@ public class SMSReceiver extends BroadcastReceiver {
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                         // CHANGE ICON
-                        .setSmallIcon(R.mipmap.ic_launcher)//.setSmallIcon(R.drawable.play)
+                        .setSmallIcon(R.drawable.sms_logo)//.setSmallIcon(R.drawable.play)
                         .setContentTitle(contact)
                         .setContentText(msgBody)
                         .setPriority(Notification.PRIORITY_MAX)
