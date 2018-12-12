@@ -19,12 +19,14 @@ The app has a couple of different screens that can be accessed and used. They ar
 
 ### Dashbaord Screen
 TODO
+Pressing the readaloud button on the top right of the screen will read aloud the names and dates of the different conversations, beginning with unread messages and then continuing to read messages. While the conversations are being read, pressing the GO button will redirect the app to the conversation that is being read at that time.
 
 ### Conversation Screen
 TODO
+Pressing the readaloud button on the top right of the screen will read aloud all of the messages that are present on the screen, distinguishing between messages that are sent and received.
 
 ### Settings Screen
-Features a text preview in the top third of the screen and a number of settings in the bottom two thirds of the screen. Each setting has an "Increase" button on the right and a "Decrease" button on the left, with an up and down facing arrow respectively. These will increase or decrease the relevant setting, changing the apps global settings, as well as the text preview on the screen.
+Features a text preview in the top third of the screen and a number of settings in the bottom two thirds of the screen. Each setting has an "Increase" button on the right and a "Decrease" button on the left, with an up and down facing arrow respectively. These will increase or decrease the relevant setting, changing the apps global settings, as well as the text preview on the screen. Pressing the readaloud button on the top right of the screen will read aloud all of the available settings in order.
 
 ### Search Screen
 Features a search bar and search button. Pressing the search button will fill the screen with conversations containing the query input in the search bar.
