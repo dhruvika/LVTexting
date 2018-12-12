@@ -28,6 +28,7 @@
         android:layout_marginRight="96dp"
         android:background="@color/colorPrimary"
         android:text="Go"
+        style="?android:attr/borderlessButtonStyle"
         android:textSize="?attr/font_size"
         android:lineSpacingMultiplier="?attr/line_spacing"
         android:letterSpacing="?attr/char_spacing"

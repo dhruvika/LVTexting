@@ -4,6 +4,8 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -214,6 +216,8 @@ public class Conversation extends AppCompatActivity {
 
 
             List<String> messagesList = new ArrayList<String>();
+            List<String> messagesDtList = new ArrayList<String>();
+            List<String> messagesClickedList = new ArrayList<String>();
             int previous = 1; //0:other, 1:user
 
             //works for all American numbers, AND justifies users
@@ -232,26 +236,42 @@ public class Conversation extends AppCompatActivity {
                         if(cursor.getString(cursor.getColumnIndex("type")).equals("2")){ //user-sent message
                             if(previous==1){//previous message also sent by me
                                 messagesList.add("");
+                                messagesDtList.add("");
+                                messagesClickedList.add("");
                             } else{
                                 messagesList.add("");
                                 messagesList.add("");
+                                messagesDtList.add("");
+                                messagesDtList.add("");
+                                messagesClickedList.add("");
+                                messagesClickedList.add("");
                             }
                             previous = 1;
                         } else { //other-sent message
                             if(previous == 0){//previous message also sent by other
                                 messagesList.add("");
+                                messagesDtList.add("");
+                                messagesClickedList.add("");
+
                             }
                             previous = 0;
                         }
                         messagesList.add(cursor.getString(cursor.getColumnIndex("body"))+'\n');
+                        messagesDtList.add(cursor.getString(cursor.getColumnIndex("date"))+'\n');
+                        messagesClickedList.add("0");
 //                        tv.setText(cursor.getString(cursor.getColumnIndex("body"))+'\n');
                     }
                 } catch (Exception e){
                     messagesList.add("ERROR!");
+                    messagesDtList.add("ERROR!");
                 }
             }
             messagesList.add("\n\n\n\n\n\n\n\n"); //to make up for scrolling padding (make sure last message is displayed)
-            String [] messagesArray = messagesList.toArray(new String[0]);
+            messagesDtList.add("\n\n\n\n\n\n\n\n");
+            final String [] messagesArray = messagesList.toArray(new String[0]);
+            final String [] pristinemessagesArray = messagesList.toArray(new String[0]);
+            final String [] messagesDtArray = messagesDtList.toArray(new String[0]);
+            final String [] messagesClickedArray = messagesClickedList.toArray(new String[0]);
 
             cursor.close();
 
@@ -279,6 +299,7 @@ public class Conversation extends AppCompatActivity {
                 @Override
                 public void onClick(View v){
                     messages.setSelection(messages.getFirstVisiblePosition()+shiftAmount+1);
+
                 }
             });
 
@@ -333,7 +354,99 @@ public class Conversation extends AppCompatActivity {
                     }).start();
                 }
             });
+
+            messages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    int pos = messages.getFirstVisiblePosition();
+                    if (messagesClickedArray[i].equals("0")){
+                        messagesClickedArray[i] = "1";
+
+                        String msgMillis = messagesDtArray[i];
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(Long.parseLong(msgMillis.substring(0,msgMillis.length()-1)));
+
+                        String mMonth = Integer.toString(calendar.get(Calendar.MONTH));
+                        if(mMonth.equals("1")){
+                            mMonth = "Jan";
+                        }else if (mMonth.equals("2")){
+                            mMonth = "Feb";
+                        }else if (mMonth.equals("3")){
+                            mMonth = "Mar";
+                        }else if (mMonth.equals("4")){
+                            mMonth = "Apr";
+                        }else if (mMonth.equals("5")){
+                            mMonth = "May";
+                        }else if (mMonth.equals("6")){
+                            mMonth = "Jun";
+                        }else if (mMonth.equals("7")){
+                            mMonth = "Jul";
+                        }else if (mMonth.equals("8")){
+                            mMonth = "Aug";
+                        }else if (mMonth.equals("9")){
+                            mMonth = "Sep";
+                        }else if (mMonth.equals("10")){
+                            mMonth = "Oct";
+                        }else if (mMonth.equals("11")){
+                            mMonth = "Nov";
+                        }else if (mMonth.equals("12")){
+                            mMonth = "Dec";
+                        } else{
+                            mMonth = "";
+                        }
+
+                        String mDay = Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+                        if(mDay.length()==1){
+                            mDay = '0'+mDay;
+                        }
+                        String mhour = Integer.toString(calendar.get(Calendar.HOUR));
+                        if(mhour.length()==1){
+                            mhour = '0'+mhour;
+                        }
+                        String mmin = Integer.toString(calendar.get(Calendar.MINUTE));
+                        if(mmin.length()==1){
+                            mmin = '0'+mmin;
+                        }
+                        String mampm = Integer.toString(calendar.get(Calendar.AM_PM));
+                        if(mampm.equals("0")){
+                            mampm = "AM";
+                        } else{
+                            mampm = "PM";
+                        }
+
+                        String time = mhour+':'+mmin+' '+mampm + ' ' + mDay+' '+mMonth;
+
+                        messagesArray[i] = pristinemessagesArray[i]+time+'\n';//messagesDtArray[i];//"HERE!";
+                    } else if (messagesClickedArray[i].equals("1")){
+                        messagesClickedArray[i] = "0";
+                        messagesArray[i] = pristinemessagesArray[i];
+                    }
+
+                    final MessageGridAdapter  ad = new MessageGridAdapter(getApplicationContext(), messagesArray);
+                    messages.setAdapter(ad);
+                    messages.setSelection(pos);//i
+//                    EditText smsInput = findViewById(R.id.smsInput);
+//                    smsInput.setText(Integer.toString(messagesDtArray[i]));
+
+                }
+            });
+
+            messages.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    String clipboardContent = pristinemessagesArray[i];
+                    if(clipboardContent.charAt(clipboardContent.length()-1)=='\n'){
+                        clipboardContent = clipboardContent.substring(0,clipboardContent.length()-1);
+                    }
+                    ClipData clip = ClipData.newPlainText("simple text",clipboardContent);
+                    clipboard.setPrimaryClip(clip);
+                    return false; //need to return a boolean for some reason
+                }
+            });
         }
+
+
 
     }
 
