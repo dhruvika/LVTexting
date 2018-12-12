@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -11,9 +11,9 @@
         <item name="android:windowBackground">@color/colorBlack</item>
         <item name="android:colorBackground">@color/colorBlack</item>
         <!-- requires API 21 and up -->
-        <item name="android:navigationBarColor">@color/colorWhite</item> <!-- bottom bar -->
-        <item name="android:statusBarColor">@color/colorWhite</item> <!-- top bar -->
-        <item name="android:colorButtonNormal">@color/colorBlack</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorWhite</item> <!-- bottom bar -->
+        <item name="android:colorButtonNormal" tools:targetApi="lollipop">@color/colorBlack</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <!--<item name="android:colorForegroundInverse">@color/colorBlack</item>-->
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
