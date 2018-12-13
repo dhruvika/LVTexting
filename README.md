@@ -58,3 +58,12 @@ Features a search bar and search button. Pressing the search button will fill th
 To get started developing SMS, all you need to do is follow steps 1-4 in Installation on Device. Now you're ready to start developing!
 
 For those interested in developing the app, but unsure where to begin, [here](https://developer.android.com/guide/slices/getting-started "Android Getting Started") is Android's Getting Started page, where you can get started with Android app development.
+
+Once you have downloaded Android Studio, you need to import the Github repository into the environment. Follow the steps below:
+1. In Github click the "Clone or download" button of the project 
+2. Download the ZIP file and unzip it. 
+3. In Android Studio Go to File -> New Project -> Import Project and select the newly unzipped folder -> press OK.
+
+
+
+
