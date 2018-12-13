@@ -26,11 +26,10 @@ The app has a couple of different screens that can be accessed and used. They ar
 
 ### Dashboard Screen
 <img src="https://github.com/dhruvika/LVTexting/blob/master/images/dashboardInverted.png" width="40%">
-TODO
--Contact & date last contacted representation in dashboard
--Unread/read tokens
--Clearing a chat
--Push notifications
+
+The dashboard contains a list of the current conversations in the inbox. Each row has a white dot if there are unread messages in the conversation, otherwise nothing. It also contains the name of the person the conversation is with if they are in the user's contacts otherwise their phone number. Finally, the row contains the date time of the most recent communications. The dashboard is sorted such that all unread messages are ordered before all read messages. Within the unread and read sections, each message is ordered based on recency.
+
+To delete any conversation, a user can long press on the corresponding row in the dashboard and then click on the Delete button that pops up under the row. Finally, the dashboard also supports push notifications. On receiving a text, a notification will pop up on the screen. On clicking the notification, the user will be directed to the dashboard where they can select the unread messages they want to read. If the user is on the dashboard when the notification is received, the dashboard will auto-refresh displaying the newly received messages on top.
 
 Pressing the readaloud button on the top right of the screen will read aloud the names and dates of the different conversations, beginning with unread messages and then continuing to read messages. While the conversations are being read, pressing the GO button will redirect the app to the conversation that is being read at that time.
 
