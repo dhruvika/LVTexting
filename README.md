@@ -1,23 +1,28 @@
 # So Much Simplicity (SMS)
 <img src="https://github.com/dhruvika/LVTexting/blob/master/images/smsLogo8.png" width="20%">
-  
-  
+This app was written in Java and developed using Android Studio, which is the IDE that we recommend all users and developers make use of when adding updating/adding this app to a device. SMS is currently only available for Android devices, and there are presently no plans to build an iOS version of it. As such, SMS can only be download to Android devices running version 4.0.3 (API 15) or higher.
+
 ## Installation on Device
 
-We plan on getting (SMS) onto the Google Play store for easy download and installation, but until then, the only option for installation on a device is by making your device a development device.
+We plan on getting (SMS) onto the Google Play store for easy download and installation, but until then, the only option for installation on a device is to download and build the project in Android Studio, and then download the app to your device, after making the phone a development device and turning on USB-debugging.
 
 To install (SMS) on your Android device you must do the following:
-- Install Android Studio a compatible computer. Android Studio can be downloaded [here](https://developer.android.com/studio/ "Android Studio")
-- Download this repository (SMS) as a ZIP file
-- Extract the downloaded ZIP file into a folder
-- In Android Studio, go to `File -> New -> Import Project` and import the folder containing the downloaded ZIP file contents. This should open the project in Android Studio
-- Follow the instructions [here](https://developer.android.com/studio/run/device "Run apps on a hardware device") to setups your device for development and run the app on your device.
+1. Install Android Studio a compatible computer. Android Studio can be downloaded [here](https://developer.android.com/studio/ "Android Studio")
+2. Download this repository (SMS) as a ZIP file
+3. Extract the downloaded ZIP file into a folder
+4. In Android Studio, go to `File -> New -> Import Project` and import the folder containing the downloaded ZIP file contents. This should open the project in Android Studio
+5. Follow the instructions [here](https://developer.android.com/studio/run/device "Run apps on a hardware device") to setups your device for development and run the app on your device.
 
-The app must be set as your default SMS app in order access features such as sending deleting messages, so when prompted to do so, tap "Yes". With that, (SMS) should be fully functional as your SMS app
+The app must be set as your default SMS app in order access features such as sending deleting messages, so when prompted to do so, tap "Yes". With that, (SMS) should be fully functional as your SMS app.
+
+Be sure to set SMS as your default texting app in order to avail of all of the built-in features (including clearing a chat, getting notifications, and making proper use of the read/unread token).
+
+###Troubleshooting Advice
+Ensure that the USB cable you are using to connect your phone to your laptop is not broken. Ensure that your phone is on while trying to download the app to it, and make sure you indicate that you trust the computer attempting to connect to your device, on the phone's screen. If the device does not show up in Android Studio, try unplugging and then replugging the device. If the problem persists, unplug and replug the device while simultaneously restarting Android Studio.
 
 ## How to Use Guide
 
-The app has a couple of different screens that can be accessed and used. They are explained here
+The app has a couple of different screens that can be accessed and used. They are explained here:
 
 ### Dashboard Screen
 <img src="https://github.com/dhruvika/LVTexting/blob/master/images/dashboardInverted.png" width="40%">
@@ -51,12 +56,6 @@ Features a search bar and search button. Pressing the search button will fill th
 
 ## Development Guide
 
-To get started developing SMS you can do the following:
-- Install Android Studio a compatible computer. Android Studio can be downloaded [here](https://developer.android.com/studio/ "Android Studio")
-- Download this repository (SMS) as a ZIP file
-- Extract the downloaded ZIP file into a folder
-- In Android Studio, go to `File -> New -> Import Project` and import the folder containing the downloaded ZIP file contents. This should open the project in Android Studio
-
-Now your ready to start developing!
+To get started developing SMS, all you need to do is follow steps 1-4 in Installation on Device. Now you're ready to start developing!
 
 For those interested in developing the app, but unsure where to begin, [here](https://developer.android.com/guide/slices/getting-started "Android Getting Started") is Android's Getting Started page, where you can get started with Android app development.
