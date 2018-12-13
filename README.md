@@ -1,5 +1,7 @@
 # So Much Simplicity (SMS)
-<img src="https://github.com/dhruvika/LVTexting/blob/master/images/smsLogo8.png" width="40%">
+<img src="https://github.com/dhruvika/LVTexting/blob/master/images/smsLogo8.png" width="20%">
+  
+  
 ## Installation on Device
 
 We plan on getting (SMS) onto the Google Play store for easy download and installation, but until then, the only option for installation on a device is by making your device a development device.
