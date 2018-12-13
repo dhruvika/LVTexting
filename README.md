@@ -1,5 +1,5 @@
 # So Much Simplicity (SMS)
-
+<img src="https://github.com/dhruvika/LVTexting/blob/master/images/smsLogo8.png" width="40%">
 ## Installation on Device
 
 We plan on getting (SMS) onto the Google Play store for easy download and installation, but until then, the only option for installation on a device is by making your device a development device.
@@ -18,6 +18,7 @@ The app must be set as your default SMS app in order access features such as sen
 The app has a couple of different screens that can be accessed and used. They are explained here
 
 ### Dashboard Screen
+<img src="https://github.com/dhruvika/LVTexting/blob/master/images/dashboardInverted.png" width="40%">
 TODO
 -Contact & date last contacted representation in dashboard
 -Unread/read tokens
@@ -27,7 +28,7 @@ TODO
 Pressing the readaloud button on the top right of the screen will read aloud the names and dates of the different conversations, beginning with unread messages and then continuing to read messages. While the conversations are being read, pressing the GO button will redirect the app to the conversation that is being read at that time.
 
 ### Conversation Screen
-
+<img src="https://github.com/dhruvika/LVTexting/blob/master/images/conversationInverted.png" width="40%">
 The conversation screen is the portion of the app that represents the actual contents of the messages exchanged between the user and their contact. As such, SMS is able to parse conversations between the user and any US number, at the moment. In order to add support for numbers with non +1 country codes, a developer would have to add in cases to support checking all possible ways a phone number can be represented in that country.
 
 SMS then is able to query the phone's built-in message database, and displays all messages that the user sent and received from this contact. All messages are separated using a blank line, and all user sent messages are right justified, while all received messages are left justified. All messages are wrapped, such that even if they take up more than one row, the entire message will be represented.
@@ -39,9 +40,11 @@ At the bottom of the conversation screen, the user can input a message and send 
 Pressing the readaloud button on the top right of the screen will read aloud all of the messages that are present on the screen, distinguishing between messages that are sent and received, with a "you said" before all messages you sent, and a "they said" before all messages you received.
 
 ### Settings Screen
+<img src="https://github.com/dhruvika/LVTexting/blob/master/images/settingsInverted.png" width="40%">
 Features a text preview in the top third of the screen and a number of settings in the bottom two thirds of the screen. Each setting has an "Increase" button on the right and a "Decrease" button on the left, with an up and down facing arrow respectively. These will increase or decrease the relevant setting, changing the apps global settings, as well as the text preview on the screen. Pressing the readaloud button on the top right of the screen will read aloud all of the available settings in order.
 
 ### Search Screen
+<img src="https://github.com/dhruvika/LVTexting/blob/master/images/searchInverted.png" width="40%">
 Features a search bar and search button. Pressing the search button will fill the screen with conversations containing the query input in the search bar.
 
 ## Development Guide
