@@ -17,7 +17,7 @@ The app must be set as your default SMS app in order access features such as sen
 
 Be sure to set SMS as your default texting app in order to avail of all of the built-in features (including clearing a chat, getting notifications, and making proper use of the read/unread token).
 
-###Troubleshooting Advice
+Troubleshooting Advice:
 Ensure that the USB cable you are using to connect your phone to your laptop is not broken. Ensure that your phone is on while trying to download the app to it, and make sure you indicate that you trust the computer attempting to connect to your device, on the phone's screen. If the device does not show up in Android Studio, try unplugging and then replugging the device. If the problem persists, unplug and replug the device while simultaneously restarting Android Studio.
 
 ## How to Use Guide
