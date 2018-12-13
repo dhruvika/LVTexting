@@ -64,7 +64,7 @@ Once you have downloaded Android Studio, you need to import the Github repositor
 2. Download the ZIP file and unzip it. 
 3. In Android Studio Go to File -> New Project -> Import Project and select the newly unzipped folder -> press OK.
 
-<img src="https://github.com/dhruvika/LVTexting/blob/master/images/android.png" width="40%">
+<img src="https://github.com/dhruvika/LVTexting/blob/master/images/android.png" width="80%">
 
 
 
