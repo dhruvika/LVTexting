@@ -66,6 +66,8 @@ Once you have downloaded Android Studio, you need to import the Github repositor
 
 <img src="https://github.com/dhruvika/LVTexting/blob/master/images/android.png" width="80%">
 
+<img src="https://github.com/dhruvika/LVTexting/blob/master/images/android.png" width="60%">
+
 
 
 
