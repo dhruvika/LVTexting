@@ -325,10 +325,16 @@ public class Conversation extends AppCompatActivity {
                                 String speak = "";
                                 int previous = -1;
                                 for(int i = messages.getFirstVisiblePosition(); i <= messages.getLastVisiblePosition(); i++) {
+                                    /*
                                     View view = messages.getChildAt(i);
                                     if (view != null) {
+                                    */
+                                    if (!messagesArray[i].equals("")) {
+                                        /*
                                         TextView textView = (TextView) view;
                                         String message = textView.getText().toString();
+                                        */
+                                        String message = messagesArray[i];
                                         if (message!= "" && message!="\n\n\n\n\n\n\n\n") {
                                             int sent = i % 2;
                                             if (sent != previous) {
