@@ -196,6 +196,7 @@ public class SettingsManager {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 textViews.get(i).setLetterSpacing(charSpacing);
             }
+            textViews.get(i).setTextColor(context.getResources().getColor(R.color.colorBlack));
         }
         viewContainer.setPadding(screenPadding, 0, screenPadding, 0);
     }
@@ -219,6 +220,7 @@ public class SettingsManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             textView.setLetterSpacing(charSpacing);
         }
+        textView.setTextColor(context.getResources().getColor(R.color.colorBlack));
     }
 
     public static float getSpeakerSpeed() {
