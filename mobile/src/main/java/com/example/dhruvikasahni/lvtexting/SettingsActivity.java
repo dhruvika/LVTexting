@@ -37,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     public void run() {
                         if (!t1.isSpeaking()) {
-                            readAloud.setBackgroundResource(R.drawable.stop);
+//                            readAloud.setBackgroundResource(R.drawable.stop);
                             t1.speak("Settings options: ", TextToSpeech.QUEUE_FLUSH, null);
                             String toSpeak = "Font size, " +
                                     "Line spacing, " +
@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
                                     "Speaker speed.";
                             t1.speak(toSpeak, TextToSpeech.QUEUE_ADD, null);
                             while (t1.isSpeaking()) {}
-                            readAloud.setBackgroundResource(R.drawable.play);
+//                            readAloud.setBackgroundResource(R.drawable.play);
                         } else{
                             t1.speak("", TextToSpeech.QUEUE_FLUSH, null);
                             t1.stop();

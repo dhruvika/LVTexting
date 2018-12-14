@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                             ArrayList<ArrayList<String>> readConversations = messageFetcher.fetchReadConversations();
                             ArrayList<ArrayList<String>> unreadConversations = messageFetcher.fetchUnreadConversations();
                             String speak = "";
-                            readAloud.setBackgroundResource(R.drawable.stop);
+//                            readAloud.setBackgroundResource(R.drawable.stop);
                             Set<String> seenAddresses = new HashSet<>();
                             if (readConversations.isEmpty() && unreadConversations.isEmpty()) {
                                 t1.speak("No new messages", TextToSpeech.QUEUE_FLUSH, null);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             restart = false;
                             messageList.clear();
-                            readAloud.setBackgroundResource(R.drawable.play);
+//                            readAloud.setBackgroundResource(R.drawable.play);
                         } else {
                             restart = true;
                             t1.speak("", TextToSpeech.QUEUE_FLUSH, null);
