@@ -321,7 +321,7 @@ public class Conversation extends AppCompatActivity {
                     new Thread(new Runnable() {
                         public void run() {
                             if (!t1.isSpeaking()) {
-                                readAloud.setBackgroundResource(R.drawable.stop);
+//                                readAloud.setBackgroundResource(R.drawable.stop);
                                 String speak = "";
                                 int previous = -1;
                                 for(int i = messages.getFirstVisiblePosition(); i <= messages.getLastVisiblePosition(); i++) {
@@ -345,7 +345,7 @@ public class Conversation extends AppCompatActivity {
                                 }
                                 t1.speak(speak, TextToSpeech.QUEUE_ADD, null);
                                 while (t1.isSpeaking()) {}
-                                readAloud.setBackgroundResource(R.drawable.play);
+//                                readAloud.setBackgroundResource(R.drawable.play);
                             } else{
                                 t1.speak("", TextToSpeech.QUEUE_FLUSH, null);
                                 t1.stop();
